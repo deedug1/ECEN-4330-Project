@@ -4,6 +4,7 @@ SEGADDR EQU 0H
 LCDADDRH EQU 40H
 ADCADDRH EQU 80H
 RTCADDRH EQU 0C0H
+LAST_WRITE EQU 10H
 
 ORG 0
 	MOV SP, #50H		;Mov SP out of BANK
@@ -163,12 +164,13 @@ L0THR7:
 	MOV A, #07H
 	ACALL IS_LESS_OR_EQUAL
 	JNB F0, NOT_7
+	MOV B, A
 	MOV DPTR, #SEGTABLE	; Mov dptr to segment table
 	MOVC A, @A+DPTR		; Load
-	MOV 10H, A		; Store last displayed value
+	MOV LAST_WRITE, A		; Store last displayed value
 	RET
 NOT_7:  
-	MOV A, 10H		;Load last displayed value
+	MOV A, LAST_WRITE		;Load last displayed value
 	RET
 	
 ;**********
