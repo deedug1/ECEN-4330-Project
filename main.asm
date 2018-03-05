@@ -8,8 +8,10 @@ LAST_WRITE EQU 10H
 
 ORG 0
 	MOV SP, #50H		;Mov SP out of BANK
-
-
+	;Init
+	ACALL INIT_PROC
+	
+;Program start
 ;****
 ;* Note: register 1 holds state
 ;****
@@ -27,6 +29,36 @@ MAIN:
 	ACALL L0THR7
 	ACALL WRITE_TO_7SEG
 	JMP MAIN
+;*********
+;* Init function
+;* Small dance function for the 7seg
+;* think gameboy color opening
+;********
+INIT_PROC:
+	MOV A, #0FEH
+	ACALL WRITE_TO_7SEG
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	RL A
+	CJNE A, #0FEH, INIT_PROC
+	MOV A, #00H
+	ACALL WRITE_TO_7SEG
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	MOV A, #0FFH
+	ACALL WRITE_TO_7SEG
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	RET
 ;*********
 ;* Delay
 ;* Delays for 255 * 50 clks
@@ -178,6 +210,7 @@ NOT_7:
 ;* dumb function that mimic state machine
 ;*********
 SET_STATE:
+	MOV A, KPR3R4
 	CPL A
 	ANL A, #80H		;Check #
 	JZ EXIT_SET_STATE	;# Not pressed
@@ -192,6 +225,7 @@ STATE_LOOP:
 	MOV A, R1		;INV STATE
 	CPL A
 	MOV R1, A
+	ACALL INIT_PROC
 EXIT_SET_STATE:
    	RET
 
