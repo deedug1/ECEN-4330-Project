@@ -4,9 +4,11 @@ SEGADDR EQU 0H
 LCDADDRH EQU 40H
 ADCADDRH EQU 80H
 RTCADDRH EQU 0C0H
+LAST_DISPLAYED EQU 10H
 
 ORG 0
 	MOV SP, #50H		;Mov SP out of BANK
+	MOV LAST_DISPLAYED, #0FFH		;Set default display val for 0to7
 
 
 ;****
@@ -81,7 +83,7 @@ KEYPAD_SCAN:
 GET_KEYPRESS_HEX:
 	PUSH 0F0H			;Push B register for work
 	MOV B, KPR1R2			;Check first two rows	
-	MOV A, #0FH			; Key pressed
+	MOV A, #0EH			; Key pressed
 	JNB B.7, END_GET_KEYPRESS	;If bit is not set end proc	
 	MOV A, #07H
 	JNB B.6, END_GET_KEYPRESS
@@ -98,7 +100,7 @@ GET_KEYPRESS_HEX:
 	MOV A, #02H
 	JNB B.0, END_GET_KEYPRESS
 	MOV B, KPR3R4			;Check state of last two rows
-	MOV A, #0EH
+	MOV A, #0FH
 	JNB B.7, END_GET_KEYPRESS	;If bit is not set end proc	
 	MOV A, #09H
 	JNB B.6, END_GET_KEYPRESS
@@ -139,7 +141,7 @@ IS_LESS_OR_EQUAL:
 	MOV PSW, #00H		;Clear PSW to not alter subb
 	SUBB A, B		;A > B
 	MOV F0, C		;Set based on carry
-	CPL F0
+	CPL F0	
 	POP 0E0H
 	RET
 ;********
@@ -163,12 +165,13 @@ L0THR7:
 	MOV A, #07H
 	ACALL IS_LESS_OR_EQUAL
 	JNB F0, NOT_7
+	MOV A, B		;Reload original val
 	MOV DPTR, #SEGTABLE	; Mov dptr to segment table
 	MOVC A, @A+DPTR		; Load
-	MOV 10H, A		; Store last displayed value
+	MOV LAST_DISPLAYED, A	; Store last displayed value
 	RET
 NOT_7:  
-	MOV A, 10H		;Load last displayed value
+	MOV A, LAST_DISPLAYED	;Load last displayed value
 	RET
 	
 ;**********
@@ -176,6 +179,7 @@ NOT_7:
 ;* dumb function that mimic state machine
 ;*********
 SET_STATE:
+	MOV A, KPR3R4		;Load R3/R4 from last scan
 	CPL A
 	ANL A, #80H		;Check #
 	JZ EXIT_SET_STATE	;# Not pressed
