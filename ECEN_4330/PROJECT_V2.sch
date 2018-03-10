@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.6.0">
+<eagle version="8.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -11917,7 +11917,7 @@ Address, Data, Control busses</description>
 </plain>
 <instances>
 <instance part="MICROCONTROLLER" gate="G$1" x="55.88" y="144.78"/>
-<instance part="DEMULTIPLEXER" gate="A" x="119.38" y="137.16"/>
+<instance part="DEMULTIPLEXER" gate="A" x="124.46" y="137.16"/>
 <instance part="SUPPLY1" gate="VCC" x="17.78" y="167.64"/>
 <instance part="SUPPLY6" gate="1" x="104.14" y="119.38"/>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
@@ -11928,16 +11928,16 @@ Address, Data, Control busses</description>
 <instance part="SUPPLY9" gate="1" x="17.78" y="119.38"/>
 </instances>
 <busses>
-<bus name="D[0..7]">
-<segment>
-<wire x1="81.28" y1="152.4" x2="99.06" y2="152.4" width="0.762" layer="92"/>
-<label x="99.06" y="152.4" size="1.778" layer="95"/>
-</segment>
-</bus>
 <bus name="A[0..15]">
 <segment>
 <wire x1="142.24" y1="134.62" x2="142.24" y2="177.8" width="0.762" layer="92"/>
 <label x="144.78" y="167.64" size="1.778" layer="95"/>
+</segment>
+</bus>
+<bus name="D[0..7]">
+<segment>
+<wire x1="96.52" y1="154.94" x2="114.3" y2="154.94" width="0.762" layer="92"/>
+<label x="88.9" y="154.94" size="1.778" layer="95"/>
 </segment>
 </bus>
 </busses>
@@ -11958,100 +11958,13 @@ Address, Data, Control busses</description>
 <segment>
 <pinref part="MICROCONTROLLER" gate="G$1" pin="ALE"/>
 <pinref part="DEMULTIPLEXER" gate="A" pin="OC"/>
-<wire x1="106.68" y1="124.46" x2="76.2" y2="124.46" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="D0" class="0">
-<segment>
-<pinref part="MICROCONTROLLER" gate="G$1" pin="P00-AD0"/>
-<pinref part="DEMULTIPLEXER" gate="A" pin="8D"/>
-<wire x1="76.2" y1="132.08" x2="78.74" y2="132.08" width="0.1524" layer="91"/>
-<wire x1="78.74" y1="132.08" x2="106.68" y2="132.08" width="0.1524" layer="91"/>
-<wire x1="78.74" y1="132.08" x2="78.74" y2="149.86" width="0.1524" layer="91"/>
-<junction x="78.74" y="132.08"/>
-<wire x1="78.74" y1="149.86" x2="81.28" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="D1" class="0">
-<segment>
-<pinref part="MICROCONTROLLER" gate="G$1" pin="P01-AD1"/>
-<pinref part="DEMULTIPLEXER" gate="A" pin="7D"/>
-<wire x1="76.2" y1="134.62" x2="81.28" y2="134.62" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="134.62" x2="106.68" y2="134.62" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="134.62" x2="81.28" y2="149.86" width="0.1524" layer="91"/>
-<junction x="81.28" y="134.62"/>
-<wire x1="81.28" y1="149.86" x2="83.82" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="D2" class="0">
-<segment>
-<pinref part="MICROCONTROLLER" gate="G$1" pin="P02-AD2"/>
-<pinref part="DEMULTIPLEXER" gate="A" pin="6D"/>
-<wire x1="76.2" y1="137.16" x2="83.82" y2="137.16" width="0.1524" layer="91"/>
-<wire x1="83.82" y1="137.16" x2="106.68" y2="137.16" width="0.1524" layer="91"/>
-<wire x1="83.82" y1="137.16" x2="83.82" y2="149.86" width="0.1524" layer="91"/>
-<junction x="83.82" y="137.16"/>
-<wire x1="83.82" y1="149.86" x2="86.36" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="D3" class="0">
-<segment>
-<pinref part="MICROCONTROLLER" gate="G$1" pin="P03-AD3"/>
-<pinref part="DEMULTIPLEXER" gate="A" pin="5D"/>
-<wire x1="76.2" y1="139.7" x2="86.36" y2="139.7" width="0.1524" layer="91"/>
-<wire x1="86.36" y1="139.7" x2="106.68" y2="139.7" width="0.1524" layer="91"/>
-<wire x1="86.36" y1="139.7" x2="86.36" y2="149.86" width="0.1524" layer="91"/>
-<junction x="86.36" y="139.7"/>
-<wire x1="86.36" y1="149.86" x2="88.9" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="D4" class="0">
-<segment>
-<pinref part="MICROCONTROLLER" gate="G$1" pin="P04-AD4"/>
-<pinref part="DEMULTIPLEXER" gate="A" pin="4D"/>
-<wire x1="76.2" y1="142.24" x2="88.9" y2="142.24" width="0.1524" layer="91"/>
-<wire x1="88.9" y1="142.24" x2="106.68" y2="142.24" width="0.1524" layer="91"/>
-<wire x1="88.9" y1="142.24" x2="88.9" y2="149.86" width="0.1524" layer="91"/>
-<junction x="88.9" y="142.24"/>
-<wire x1="88.9" y1="149.86" x2="91.44" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="D5" class="0">
-<segment>
-<pinref part="MICROCONTROLLER" gate="G$1" pin="P05-AD5"/>
-<pinref part="DEMULTIPLEXER" gate="A" pin="3D"/>
-<wire x1="76.2" y1="144.78" x2="91.44" y2="144.78" width="0.1524" layer="91"/>
-<wire x1="91.44" y1="144.78" x2="106.68" y2="144.78" width="0.1524" layer="91"/>
-<wire x1="91.44" y1="144.78" x2="91.44" y2="149.86" width="0.1524" layer="91"/>
-<junction x="91.44" y="144.78"/>
-<wire x1="91.44" y1="149.86" x2="93.98" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="D6" class="0">
-<segment>
-<pinref part="MICROCONTROLLER" gate="G$1" pin="P06-AD6"/>
-<pinref part="DEMULTIPLEXER" gate="A" pin="2D"/>
-<wire x1="76.2" y1="147.32" x2="93.98" y2="147.32" width="0.1524" layer="91"/>
-<wire x1="93.98" y1="147.32" x2="106.68" y2="147.32" width="0.1524" layer="91"/>
-<wire x1="93.98" y1="147.32" x2="93.98" y2="149.86" width="0.1524" layer="91"/>
-<junction x="93.98" y="147.32"/>
-<wire x1="93.98" y1="149.86" x2="96.52" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="D7" class="0">
-<segment>
-<pinref part="MICROCONTROLLER" gate="G$1" pin="P07-AD7"/>
-<pinref part="DEMULTIPLEXER" gate="A" pin="1D"/>
-<wire x1="76.2" y1="149.86" x2="96.52" y2="149.86" width="0.1524" layer="91"/>
-<wire x1="96.52" y1="149.86" x2="106.68" y2="149.86" width="0.1524" layer="91"/>
-<junction x="96.52" y="149.86"/>
-<wire x1="96.52" y1="149.86" x2="99.06" y2="152.4" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="124.46" x2="76.2" y2="124.46" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GND" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="C"/>
-<wire x1="106.68" y1="127" x2="104.14" y2="127" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="127" x2="104.14" y2="127" width="0.1524" layer="91"/>
 <wire x1="104.14" y1="127" x2="104.14" y2="121.92" width="0.1524" layer="91"/>
 <pinref part="SUPPLY6" gate="1" pin="GND"/>
 </segment>
@@ -12083,7 +11996,7 @@ Address, Data, Control busses</description>
 <net name="A7" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="1Q"/>
-<wire x1="132.08" y1="149.86" x2="139.7" y2="149.86" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="149.86" x2="139.7" y2="149.86" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="149.86" x2="142.24" y2="152.4" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -12139,49 +12052,49 @@ Address, Data, Control busses</description>
 <net name="A6" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="2Q"/>
-<wire x1="132.08" y1="147.32" x2="139.7" y2="147.32" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="147.32" x2="139.7" y2="147.32" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="147.32" x2="142.24" y2="149.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="A5" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="3Q"/>
-<wire x1="132.08" y1="144.78" x2="139.7" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="144.78" x2="139.7" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="144.78" x2="142.24" y2="147.32" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="A4" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="4Q"/>
-<wire x1="132.08" y1="142.24" x2="139.7" y2="142.24" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="142.24" x2="139.7" y2="142.24" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="142.24" x2="142.24" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="A3" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="5Q"/>
-<wire x1="132.08" y1="139.7" x2="139.7" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="139.7" x2="139.7" y2="139.7" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="139.7" x2="142.24" y2="142.24" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="A2" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="6Q"/>
-<wire x1="132.08" y1="137.16" x2="139.7" y2="137.16" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="137.16" x2="139.7" y2="137.16" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="137.16" x2="142.24" y2="139.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="A1" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="7Q"/>
-<wire x1="132.08" y1="134.62" x2="139.7" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="134.62" x2="139.7" y2="134.62" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="134.62" x2="142.24" y2="137.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="A0" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="8Q"/>
-<wire x1="132.08" y1="132.08" x2="139.7" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="132.08" x2="139.7" y2="132.08" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="132.08" x2="142.24" y2="134.62" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -12318,6 +12231,100 @@ Address, Data, Control busses</description>
 <pinref part="MICROCONTROLLER" gate="G$1" pin="XTAL1"/>
 <wire x1="35.56" y1="177.8" x2="30.48" y2="177.8" width="0.1524" layer="91"/>
 <label x="27.94" y="177.8" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="D0" class="0">
+<segment>
+<wire x1="114.3" y1="154.94" x2="111.76" y2="152.4" width="0.1524" layer="91"/>
+<pinref part="MICROCONTROLLER" gate="G$1" pin="P00-AD0"/>
+<wire x1="76.2" y1="132.08" x2="93.98" y2="149.86" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="1D"/>
+<wire x1="93.98" y1="149.86" x2="111.76" y2="149.86" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="152.4" x2="111.76" y2="149.86" width="0.1524" layer="91"/>
+<junction x="111.76" y="149.86"/>
+</segment>
+</net>
+<net name="D1" class="0">
+<segment>
+<wire x1="111.76" y1="154.94" x2="109.22" y2="152.4" width="0.1524" layer="91"/>
+<pinref part="MICROCONTROLLER" gate="G$1" pin="P01-AD1"/>
+<wire x1="76.2" y1="134.62" x2="88.9" y2="147.32" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="2D"/>
+<wire x1="88.9" y1="147.32" x2="109.22" y2="147.32" width="0.1524" layer="91"/>
+<wire x1="109.22" y1="147.32" x2="111.76" y2="147.32" width="0.1524" layer="91"/>
+<wire x1="109.22" y1="152.4" x2="109.22" y2="147.32" width="0.1524" layer="91"/>
+<junction x="109.22" y="147.32"/>
+</segment>
+</net>
+<net name="D2" class="0">
+<segment>
+<wire x1="109.22" y1="154.94" x2="106.68" y2="152.4" width="0.1524" layer="91"/>
+<pinref part="MICROCONTROLLER" gate="G$1" pin="P02-AD2"/>
+<wire x1="76.2" y1="137.16" x2="83.82" y2="144.78" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="3D"/>
+<wire x1="83.82" y1="144.78" x2="106.68" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="144.78" x2="111.76" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="152.4" x2="106.68" y2="144.78" width="0.1524" layer="91"/>
+<junction x="106.68" y="144.78"/>
+</segment>
+</net>
+<net name="D3" class="0">
+<segment>
+<wire x1="106.68" y1="154.94" x2="104.14" y2="152.4" width="0.1524" layer="91"/>
+<pinref part="MICROCONTROLLER" gate="G$1" pin="P03-AD3"/>
+<wire x1="76.2" y1="139.7" x2="78.74" y2="142.24" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="4D"/>
+<wire x1="78.74" y1="142.24" x2="104.14" y2="142.24" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="142.24" x2="111.76" y2="142.24" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="152.4" x2="104.14" y2="142.24" width="0.1524" layer="91"/>
+<junction x="104.14" y="142.24"/>
+</segment>
+</net>
+<net name="D4" class="0">
+<segment>
+<wire x1="104.14" y1="154.94" x2="101.6" y2="152.4" width="0.1524" layer="91"/>
+<pinref part="MICROCONTROLLER" gate="G$1" pin="P04-AD4"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="5D"/>
+<wire x1="76.2" y1="142.24" x2="78.74" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="139.7" x2="101.6" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="101.6" y1="139.7" x2="111.76" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="101.6" y1="152.4" x2="101.6" y2="139.7" width="0.1524" layer="91"/>
+<junction x="101.6" y="139.7"/>
+</segment>
+</net>
+<net name="D5" class="0">
+<segment>
+<wire x1="101.6" y1="154.94" x2="99.06" y2="152.4" width="0.1524" layer="91"/>
+<pinref part="MICROCONTROLLER" gate="G$1" pin="P05-AD5"/>
+<wire x1="76.2" y1="144.78" x2="83.82" y2="137.16" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="6D"/>
+<wire x1="83.82" y1="137.16" x2="99.06" y2="137.16" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="137.16" x2="111.76" y2="137.16" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="152.4" x2="99.06" y2="137.16" width="0.1524" layer="91"/>
+<junction x="99.06" y="137.16"/>
+</segment>
+</net>
+<net name="D6" class="0">
+<segment>
+<wire x1="99.06" y1="154.94" x2="96.52" y2="152.4" width="0.1524" layer="91"/>
+<pinref part="MICROCONTROLLER" gate="G$1" pin="P06-AD6"/>
+<wire x1="76.2" y1="147.32" x2="88.9" y2="134.62" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="7D"/>
+<wire x1="88.9" y1="134.62" x2="96.52" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="134.62" x2="111.76" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="152.4" x2="96.52" y2="134.62" width="0.1524" layer="91"/>
+<junction x="96.52" y="134.62"/>
+</segment>
+</net>
+<net name="D7" class="0">
+<segment>
+<wire x1="96.52" y1="154.94" x2="93.98" y2="152.4" width="0.1524" layer="91"/>
+<pinref part="MICROCONTROLLER" gate="G$1" pin="P07-AD7"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="8D"/>
+<wire x1="76.2" y1="149.86" x2="93.98" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="132.08" x2="111.76" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="152.4" x2="93.98" y2="132.08" width="0.1524" layer="91"/>
+<junction x="93.98" y="132.08"/>
 </segment>
 </net>
 </nets>
@@ -13035,7 +13042,7 @@ Address, Data, Control busses</description>
 <description>Chip Select</description>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">Chip select</text>
-<text x="53.34" y="162.56" size="1.778" layer="97">= neg-edge(RD, 1) neg-edge(WR, 0) </text>
+<text x="53.34" y="162.56" size="1.778" layer="97">= TBD</text>
 <text x="60.96" y="170.18" size="1.778" layer="97">= ~WR &amp; P3.5 &amp; PSEN &amp; ~A15 &amp; ~A14</text>
 <text x="55.88" y="167.64" size="1.778" layer="97">= ~P3.5 + ~PSEN + ~A15 + ~A14</text>
 <text x="58.42" y="147.32" size="1.778" layer="97">= ~P3.5 + ~PSEN + ~A15 + A14</text>
@@ -13054,52 +13061,10 @@ Address, Data, Control busses</description>
 <busses>
 </busses>
 <nets>
-<net name="A15" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="I0"/>
-<wire x1="17.78" y1="170.18" x2="12.7" y2="170.18" width="0.1524" layer="91"/>
-<label x="10.16" y="170.18" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="N$35" class="0">
 <segment>
 <pinref part="CSLOGIC" gate="G$1" pin="CLK/I0"/>
 <wire x1="17.78" y1="175.26" x2="7.62" y2="175.26" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="A14" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="I1"/>
-<wire x1="17.78" y1="167.64" x2="12.7" y2="167.64" width="0.1524" layer="91"/>
-<label x="10.16" y="167.64" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="RD" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="I4"/>
-<wire x1="17.78" y1="160.02" x2="12.7" y2="160.02" width="0.1524" layer="91"/>
-<label x="10.16" y="160.02" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="WR" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="I5"/>
-<wire x1="17.78" y1="157.48" x2="12.7" y2="157.48" width="0.1524" layer="91"/>
-<label x="10.16" y="157.48" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="PSEN" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="I2"/>
-<wire x1="17.78" y1="165.1" x2="10.16" y2="165.1" width="0.1524" layer="91"/>
-<label x="10.16" y="165.1" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="P3.5" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="I3"/>
-<wire x1="17.78" y1="162.56" x2="10.16" y2="162.56" width="0.1524" layer="91"/>
-<label x="10.16" y="162.56" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="ADCCS" class="0">
@@ -13169,6 +13134,48 @@ Address, Data, Control busses</description>
 <pinref part="CSLOGIC" gate="G$1" pin="O9"/>
 <wire x1="43.18" y1="170.18" x2="48.26" y2="170.18" width="0.1524" layer="91"/>
 <label x="45.72" y="170.18" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="PSEN" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="I0"/>
+<wire x1="17.78" y1="170.18" x2="12.7" y2="170.18" width="0.1524" layer="91"/>
+<label x="10.16" y="170.18" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="A15" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="I1"/>
+<wire x1="17.78" y1="167.64" x2="12.7" y2="167.64" width="0.1524" layer="91"/>
+<label x="10.16" y="167.64" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="A14" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="I2"/>
+<wire x1="17.78" y1="165.1" x2="12.7" y2="165.1" width="0.1524" layer="91"/>
+<label x="10.16" y="165.1" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="WR" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="I3"/>
+<wire x1="17.78" y1="162.56" x2="12.7" y2="162.56" width="0.1524" layer="91"/>
+<label x="10.16" y="162.56" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="RD" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="I4"/>
+<wire x1="17.78" y1="160.02" x2="12.7" y2="160.02" width="0.1524" layer="91"/>
+<label x="10.16" y="160.02" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="P3.5" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="I5"/>
+<wire x1="17.78" y1="157.48" x2="12.7" y2="157.48" width="0.1524" layer="91"/>
+<label x="10.16" y="157.48" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
@@ -13254,7 +13261,7 @@ Address, Data, Control busses</description>
 <instance part="FRAME6" gate="G$1" x="0" y="0"/>
 <instance part="FRAME6" gate="G$2" x="147.32" y="0"/>
 <instance part="7SEGLATCH" gate="A" x="38.1" y="157.48"/>
-<instance part="SUPPLY7" gate="1" x="7.62" y="139.7"/>
+<instance part="SUPPLY7" gate="1" x="22.86" y="139.7"/>
 <instance part="R2" gate="G$1" x="63.5" y="170.18" smashed="yes"/>
 <instance part="R3" gate="G$1" x="63.5" y="167.64" smashed="yes"/>
 <instance part="R4" gate="G$1" x="63.5" y="165.1" smashed="yes"/>
@@ -13270,7 +13277,7 @@ Address, Data, Control busses</description>
 <bus name="D[0..7]">
 <segment>
 <wire x1="22.86" y1="154.94" x2="22.86" y2="172.72" width="0.762" layer="92"/>
-<label x="12.7" y="165.1" size="1.778" layer="95"/>
+<label x="10.16" y="165.1" size="1.778" layer="95"/>
 </segment>
 </bus>
 </busses>
@@ -13321,21 +13328,6 @@ Address, Data, Control busses</description>
 <segment>
 <pinref part="7SEGLATCH" gate="A" pin="4D"/>
 <wire x1="25.4" y1="162.56" x2="22.86" y2="165.1" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="7SEGCSWR" class="0">
-<segment>
-<pinref part="7SEGLATCH" gate="A" pin="OC"/>
-<wire x1="25.4" y1="144.78" x2="20.32" y2="144.78" width="0.1524" layer="91"/>
-<label x="10.16" y="144.78" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="GND" class="0">
-<segment>
-<pinref part="SUPPLY7" gate="1" pin="GND"/>
-<wire x1="7.62" y1="142.24" x2="7.62" y2="147.32" width="0.1524" layer="91"/>
-<pinref part="7SEGLATCH" gate="A" pin="C"/>
-<wire x1="7.62" y1="147.32" x2="25.4" y2="147.32" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$3" class="0">
@@ -13462,6 +13454,21 @@ Address, Data, Control busses</description>
 <wire x1="109.22" y1="157.48" x2="109.22" y2="160.02" width="0.1524" layer="91"/>
 <junction x="109.22" y="157.48"/>
 <pinref part="P+1" gate="VCC" pin="VCC"/>
+</segment>
+</net>
+<net name="GND" class="0">
+<segment>
+<pinref part="7SEGLATCH" gate="A" pin="OC"/>
+<pinref part="SUPPLY7" gate="1" pin="GND"/>
+<wire x1="25.4" y1="144.78" x2="22.86" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="144.78" x2="22.86" y2="142.24" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="7SEGCSWR" class="0">
+<segment>
+<pinref part="7SEGLATCH" gate="A" pin="C"/>
+<wire x1="25.4" y1="147.32" x2="17.78" y2="147.32" width="0.1524" layer="91"/>
+<label x="10.16" y="147.32" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
