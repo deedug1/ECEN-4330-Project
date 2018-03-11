@@ -13890,38 +13890,11 @@ Address, Data, Control busses</description>
 <label x="10.16" y="167.64" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N$23" class="0">
+<net name="ALE" class="0">
 <segment>
 <pinref part="RTC" gate="G$1" pin="3"/>
 <wire x1="20.32" y1="165.1" x2="15.24" y2="165.1" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="A0" class="0">
-<segment>
-<pinref part="RTC" gate="G$1" pin="4"/>
-<wire x1="20.32" y1="162.56" x2="15.24" y2="162.56" width="0.1524" layer="91"/>
-<label x="10.16" y="162.56" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="A1" class="0">
-<segment>
-<pinref part="RTC" gate="G$1" pin="5"/>
-<wire x1="20.32" y1="160.02" x2="15.24" y2="160.02" width="0.1524" layer="91"/>
-<label x="10.16" y="160.02" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="A2" class="0">
-<segment>
-<pinref part="RTC" gate="G$1" pin="6"/>
-<wire x1="20.32" y1="157.48" x2="15.24" y2="157.48" width="0.1524" layer="91"/>
-<label x="10.16" y="157.48" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="A3" class="0">
-<segment>
-<pinref part="RTC" gate="G$1" pin="7"/>
-<wire x1="20.32" y1="154.94" x2="15.24" y2="154.94" width="0.1524" layer="91"/>
-<label x="10.16" y="154.94" size="1.778" layer="95"/>
+<label x="10.16" y="165.1" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="RD" class="0">
@@ -13944,12 +13917,22 @@ Address, Data, Control busses</description>
 <wire x1="35.56" y1="152.4" x2="40.64" y2="152.4" width="0.1524" layer="91"/>
 <label x="40.64" y="152.4" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="RTC" gate="G$1" pin="7"/>
+<wire x1="20.32" y1="154.94" x2="15.24" y2="154.94" width="0.1524" layer="91"/>
+<label x="10.16" y="154.94" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="D2" class="0">
 <segment>
 <pinref part="RTC" gate="G$1" pin="12"/>
 <wire x1="35.56" y1="154.94" x2="40.64" y2="154.94" width="0.1524" layer="91"/>
 <label x="40.64" y="154.94" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="RTC" gate="G$1" pin="6"/>
+<wire x1="20.32" y1="157.48" x2="15.24" y2="157.48" width="0.1524" layer="91"/>
+<label x="10.16" y="157.48" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="D1" class="0">
@@ -13958,6 +13941,11 @@ Address, Data, Control busses</description>
 <wire x1="35.56" y1="157.48" x2="40.64" y2="157.48" width="0.1524" layer="91"/>
 <label x="40.64" y="157.48" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="RTC" gate="G$1" pin="5"/>
+<wire x1="20.32" y1="160.02" x2="15.24" y2="160.02" width="0.1524" layer="91"/>
+<label x="10.16" y="160.02" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="D0" class="0">
 <segment>
@@ -13965,25 +13953,23 @@ Address, Data, Control busses</description>
 <wire x1="35.56" y1="160.02" x2="40.64" y2="160.02" width="0.1524" layer="91"/>
 <label x="40.64" y="160.02" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="RTC" gate="G$1" pin="4"/>
+<wire x1="20.32" y1="162.56" x2="15.24" y2="162.56" width="0.1524" layer="91"/>
+<label x="10.16" y="162.56" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="VCC" class="0">
 <segment>
-<pinref part="RTC" gate="G$1" pin="16"/>
-<wire x1="35.56" y1="165.1" x2="40.64" y2="165.1" width="0.1524" layer="91"/>
-<pinref part="RTC" gate="G$1" pin="17"/>
-<wire x1="35.56" y1="167.64" x2="40.64" y2="167.64" width="0.1524" layer="91"/>
-<wire x1="40.64" y1="165.1" x2="40.64" y2="167.64" width="0.1524" layer="91"/>
 <pinref part="RTC" gate="G$1" pin="18"/>
 <wire x1="35.56" y1="170.18" x2="40.64" y2="170.18" width="0.1524" layer="91"/>
-<wire x1="40.64" y1="167.64" x2="40.64" y2="170.18" width="0.1524" layer="91"/>
-<junction x="40.64" y="167.64"/>
 <wire x1="40.64" y1="170.18" x2="40.64" y2="172.72" width="0.1524" layer="91"/>
-<junction x="40.64" y="170.18"/>
-<pinref part="RTC" gate="G$1" pin="15"/>
-<wire x1="35.56" y1="162.56" x2="40.64" y2="162.56" width="0.1524" layer="91"/>
-<wire x1="40.64" y1="162.56" x2="40.64" y2="165.1" width="0.1524" layer="91"/>
-<junction x="40.64" y="165.1"/>
 <pinref part="P+9" gate="VCC" pin="VCC"/>
+<pinref part="RTC" gate="G$1" pin="15"/>
+<wire x1="35.56" y1="162.56" x2="43.18" y2="162.56" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="162.56" x2="43.18" y2="170.18" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="170.18" x2="40.64" y2="170.18" width="0.1524" layer="91"/>
+<junction x="40.64" y="170.18"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -13992,6 +13978,18 @@ Address, Data, Control busses</description>
 <wire x1="20.32" y1="149.86" x2="15.24" y2="149.86" width="0.1524" layer="91"/>
 <pinref part="GND7" gate="1" pin="GND"/>
 <wire x1="15.24" y1="147.32" x2="15.24" y2="149.86" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$25" class="0">
+<segment>
+<pinref part="RTC" gate="G$1" pin="16"/>
+<wire x1="35.56" y1="165.1" x2="40.64" y2="165.1" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$29" class="0">
+<segment>
+<pinref part="RTC" gate="G$1" pin="17"/>
+<wire x1="35.56" y1="167.64" x2="40.64" y2="167.64" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

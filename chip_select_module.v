@@ -30,7 +30,7 @@ module chip_select(PSEN, WR, RD, A15, A14, P3_5,
 	// I/O Logic
 	assign SEGCSWR = ~WR & P3_5 & PSEN & ~A15 & ~A14;
 	assign RTCCS = ~P3_5 | ~PSEN | ~A15 | ~A14;
-	assign LCDCS = P3_5 & PSEN & A15 & A14 & (~RD | ~WR); 
+	assign LCDCS = P3_5 & PSEN & ~A15 & A14 & (~RD | ~WR); 
 	assign ADCCS = ~P3_5 | ~PSEN | ~A15 | A14;
 	assign R_W = WR | ~RD;
 	// Memory logic
