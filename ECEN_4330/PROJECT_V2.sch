@@ -11790,8 +11790,6 @@ In this library the device names are the same as the pin names of the symbols, t
 <part name="GND7" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="P+10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
-<part name="R11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0204/5" package3d_urn="urn:adsk.eagle:package:23488/1" value="10k\"/>
-<part name="R12" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0204/5" package3d_urn="urn:adsk.eagle:package:23488/1" value="10k"/>
 <part name="GND9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="IC1" library="Fuckboiz" deviceset="74*573" device="N" technology="AS"/>
 <part name="GND4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -13035,6 +13033,13 @@ Address, Data, Control busses</description>
 <label x="10.16" y="162.56" size="1.778" layer="95"/>
 </segment>
 </net>
+<net name="COLORCS" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="O6"/>
+<wire x1="43.18" y1="162.56" x2="48.26" y2="162.56" width="0.1524" layer="91"/>
+<label x="45.72" y="162.56" size="1.778" layer="95"/>
+</segment>
+</net>
 <net name="WR" class="0">
 <segment>
 <pinref part="CSLOGIC" gate="G$1" pin="I4"/>
@@ -13049,11 +13054,11 @@ Address, Data, Control busses</description>
 <label x="10.16" y="157.48" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="COLORCS" class="0">
+<net name="P3.5" class="0">
 <segment>
-<pinref part="CSLOGIC" gate="G$1" pin="O6"/>
-<wire x1="43.18" y1="162.56" x2="48.26" y2="162.56" width="0.1524" layer="91"/>
-<label x="45.72" y="162.56" size="1.778" layer="95"/>
+<pinref part="CSLOGIC" gate="G$1" pin="I6"/>
+<wire x1="17.78" y1="154.94" x2="12.7" y2="154.94" width="0.1524" layer="91"/>
+<label x="10.16" y="154.94" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
@@ -13623,8 +13628,6 @@ Address, Data, Control busses</description>
 <instance part="TEMPSENS" gate="A" x="10.16" y="132.08"/>
 <instance part="GND8" gate="1" x="132.08" y="106.68"/>
 <instance part="P+10" gate="VCC" x="10.16" y="157.48"/>
-<instance part="R11" gate="G$1" x="50.8" y="152.4" rot="R180"/>
-<instance part="R12" gate="G$1" x="66.04" y="152.4" rot="R180"/>
 <instance part="GND9" gate="1" x="45.72" y="119.38"/>
 </instances>
 <busses>
@@ -13702,13 +13705,9 @@ Address, Data, Control busses</description>
 <wire x1="50.8" y1="129.54" x2="50.8" y2="124.46" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="124.46" x2="45.72" y2="124.46" width="0.1524" layer="91"/>
 <pinref part="ADC" gate="A" pin="REF-"/>
-<wire x1="81.28" y1="134.62" x2="71.12" y2="134.62" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="134.62" x2="50.8" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="81.28" y1="134.62" x2="50.8" y2="134.62" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="134.62" x2="50.8" y2="129.54" width="0.1524" layer="91"/>
 <junction x="50.8" y="129.54"/>
-<pinref part="R12" gate="G$1" pin="1"/>
-<wire x1="71.12" y1="152.4" x2="71.12" y2="134.62" width="0.1524" layer="91"/>
-<junction x="71.12" y="134.62"/>
 <pinref part="GND9" gate="1" pin="GND"/>
 <wire x1="45.72" y1="124.46" x2="45.72" y2="121.92" width="0.1524" layer="91"/>
 </segment>
@@ -13732,25 +13731,12 @@ Address, Data, Control busses</description>
 <wire x1="127" y1="142.24" x2="132.08" y2="142.24" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$30" class="0">
-<segment>
-<pinref part="R11" gate="G$1" pin="1"/>
-<pinref part="R12" gate="G$1" pin="2"/>
-<wire x1="55.88" y1="152.4" x2="58.42" y2="152.4" width="0.1524" layer="91"/>
-<pinref part="ADC" gate="A" pin="REF+"/>
-<wire x1="58.42" y1="152.4" x2="60.96" y2="152.4" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="132.08" x2="58.42" y2="132.08" width="0.1524" layer="91"/>
-<wire x1="58.42" y1="132.08" x2="58.42" y2="152.4" width="0.1524" layer="91"/>
-<junction x="58.42" y="152.4"/>
-</segment>
-</net>
 <net name="VCC" class="0">
 <segment>
 <pinref part="TEMPSENS" gate="A" pin="+VS"/>
 <wire x1="12.7" y1="132.08" x2="10.16" y2="132.08" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="132.08" x2="10.16" y2="152.4" width="0.1524" layer="91"/>
-<pinref part="R11" gate="G$1" pin="2"/>
-<wire x1="10.16" y1="152.4" x2="45.72" y2="152.4" width="0.1524" layer="91"/>
+<wire x1="10.16" y1="152.4" x2="58.42" y2="152.4" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="152.4" x2="10.16" y2="154.94" width="0.1524" layer="91"/>
 <junction x="10.16" y="152.4"/>
 <pinref part="P+10" gate="VCC" pin="VCC"/>
@@ -13763,6 +13749,9 @@ Address, Data, Control busses</description>
 <junction x="78.74" y="116.84"/>
 <wire x1="10.16" y1="116.84" x2="10.16" y2="132.08" width="0.1524" layer="91"/>
 <junction x="10.16" y="132.08"/>
+<pinref part="ADC" gate="A" pin="REF+"/>
+<wire x1="81.28" y1="132.08" x2="58.42" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="132.08" x2="58.42" y2="152.4" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="RD" class="0">

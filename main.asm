@@ -285,7 +285,8 @@ READ_FROM_RTC:
 	MOV DPH, #RTCADDRH
 	MOV DPL, R0			; Set lower address
 	MOVX A, @DPTR		; Do read
-	MOV @R0, A		; Store read
+	ANL A, #0FH			; Remove garbage in high nibble
+	MOV @R0, A			; Store read
 	CLR P3.5
 	RET
 ;******
@@ -357,6 +358,17 @@ READ_FROM_LCD_CMD:
 	MOV DPH, #LCDADDRH
 	MOV DPL, #02H		;Instruction address READ
 	MOVX A, @DPTR
+	CLR P3.5
+	RET
+;*******
+;* Write to LCD COLOR PORT fuction
+;* Writes a value in A to the LCD Color port
+;*******
+WRITE_TO_LCD_CLR:
+	SETB P3.5
+	MOV DPH, #LCDCLRADDRH
+	MOV DPL, #00H		;Doesn't matter
+	MOVX A, @DPTR		
 	CLR P3.5
 	RET
 ;*******
