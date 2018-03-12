@@ -11,7 +11,7 @@ ADCADDRH EQU 80H
 RTCADDRH EQU 0C0H
 LAST_WRITE EQU 0AH
 TEMPR_CONST EQU 18		; Constant used for temperature conversion
-S1 EQU 20H
+S1 EQU 20H				; Constants used for RTC Registers
 S10 EQU 21H
 MI1 EQU 22H
 MI10 EQU 23H
@@ -24,6 +24,9 @@ MO10 EQU 29H
 Y1 EQU 2AH
 Y10 EQU 2BH
 W EQU 2CH
+CD EQU 2DH
+CE EQU 2EH
+CF EQU 2FH
 
 ORG 0
 	
@@ -44,9 +47,11 @@ MAIN:
 	ACALL KEYPAD_SCAN	;Allow for bouncing
 	ACALL KEYPAD_SCAN
 	ACALL KEYPAD_SCAN
-	ACALL READ_RTC_MI1
+	MOV R0, #MI1
+	ACALL READ_FROM_RTC
 	ACALL IS_RTC_BUSY
-	ACALL READ_RTC_MI10
+	MOV R0, #MI10
+	ACALL READ_FROM_RTC
 	ACALL IS_RTC_BUSY
 	ACALL SET_STATE
 	ACALL DO_CONVERSION
@@ -215,287 +220,81 @@ WRITE_TO_7SEG:
 ;* RTC Interface
 ;* Procedures that deal with interfacing with the RTC
 ;******
+;*******
+;* Rtc initialize function
+;* Initializes the RTC and sets all registers to 0 
+;*******
 INIT_RTC:
+	PUSH 0
+	PUSH 1					; Push R1, R0 for work
+	MOV R0, #CF				
 	MOV A, #00H
-	ACALL WRITE_RTC_CF		; Start counter and init reset
+	ACALL WRITE_TO_RTC		; Start counter and init reset
+	MOV R0, #CD
 	MOV A, #00H
-	ACALL WRITE_RTC_CD		; Set CD Register
+	ACALL WRITE_TO_RTC		; Set CD Register
 	ACALL IS_RTC_BUSY
-	MOV A, #07H			; Stop counter and reset counter set to 24hr mode
-	ACALL WRITE_RTC_CF
-	MOV A, #00H
-	ACALL WRITE_RTC_S1
-	ACALL WRITE_RTC_S10
-	ACALL WRITE_RTC_MI1
-	ACALL WRITE_RTC_MI10
-	ACALL WRITE_RTC_H1
-	ACALL WRITE_RTC_H10
-	ACALL WRITE_RTC_D1
-	ACALL WRITE_RTC_D10
-	ACALL WRITE_RTC_MO1
-	ACALL WRITE_RTC_MO10
-	ACALL WRITE_RTC_Y1
-	ACALL WRITE_RTC_Y10
-	ACALL WRITE_RTC_W
-	ACALL WRITE_RTC_CF 		; Init finished
+	MOV R0, #CF
+	MOV A, #07H				; Stop counter and reset counter set to 24hr mode
+	ACALL WRITE_TO_RTC	
+	MOV A, #00H				; Setup for RTC wipe loop
+	MOV R0, #S1
+	MOV R1, #0BH			; 12 DATA REGISTERS
+INIT_RTC_LOOP:
+	ACALL WRITE_TO_RTC
+	INC R0					; Increment for next RTC reg
+	DJNZ R1, INIT_RTC_LOOP			
+	POP 1
+	POP 0
 	RET
 ;******
 ;* Is RTC Busy function
-;* stalls cpu untill the RTC is usable
+;* stalls cpu untill the RTC is usable 
+;* Note: R0 is changed
 ;******
 IS_RTC_BUSY:
+	MOV R0, #CD
 	MOV A, #00H
-	ACALL WRITE_RTC_CD
+	ACALL WRITE_TO_RTC
 	MOV A, #01H
-	ACALL WRITE_RTC_CD
-	ACALL READ_RTC_CD
-	ACALL WRITE_TO_7SEG
+	ACALL WRITE_TO_RTC
+	ACALL READ_FROM_RTC
 	ANL A, #02H
 	JNZ IS_RTC_BUSY
 	MOV A, #00H
-	ACALL WRITE_RTC_CD
+	ACALL WRITE_TO_RTC
 	RET
-	
-WRITE_RTC_S1:
-	SETB P3.5
+;**********
+;* Write to RTC function
+;* Writes to the RTC I/O Port with R0 as the address and A as the data
+;**********
+WRITE_TO_RTC:
+	SETB P3.5			; Set to I/O map
 	MOV DPH, #RTCADDRH
-	MOV DPL, #00H
-	MOVX @DPTR, A
+	MOV DPL, R0			; Set lower address
+	MOVX @DPTR, A			; Do write
 	CLR P3.5
 	RET
-WRITE_RTC_S10:
-	SETB P3.5
+;**********
+;* Read from RTC function
+;* Reads from the RTC I/O Port with R0 as the address and A as the data
+;* Note: Stores value at address in R0 
+;**********
+READ_FROM_RTC:
+	SETB P3.5			; Set to I/O map
 	MOV DPH, #RTCADDRH
-	MOV DPL, #01H
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_MI1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #02H
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_MI10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #03H
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_H1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #04H
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_H10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #05H
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_D1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #06H
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_D10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #07H
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_MO1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #08H
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_MO10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #09H
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_Y1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0AH
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_Y10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0BH
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_W:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0CH
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_CD:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0DH
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_CE:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0EH
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-WRITE_RTC_CF:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0FH
-	MOVX @DPTR, A
-	CLR P3.5
-	RET
-READ_RTC_S1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #00H
-	MOVX A, @DPTR
-	MOV S1, A
-	CLR P3.5
-	RET
-READ_RTC_S10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #01H
-	MOVX A, @DPTR
-	MOV S10, A
-	CLR P3.5
-	RET
-READ_RTC_MI1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #02H
-	MOVX A, @DPTR
-	MOV MI1, A
-	CLR P3.5
-	RET
-READ_RTC_MI10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #03H
-	MOVX A, @DPTR
-	MOV MI10, A
-	CLR P3.5
-	RET
-READ_RTC_H1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #04H
-	MOVX A, @DPTR
-	MOV H1, A
-	CLR P3.5
-	RET
-READ_RTC_H10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #05H
-	MOVX A, @DPTR
-	MOV H10, A
-	CLR P3.5
-	RET
-READ_RTC_D1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #06H
-	MOVX A, @DPTR
-	MOV D1, A
-	CLR P3.5
-	RET
-READ_RTC_D10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #07H
-	MOVX A, @DPTR
-	MOV D10, A
-	CLR P3.5
-	RET
-READ_RTC_MO1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #08H
-	MOVX A, @DPTR
-	MOV MO1, A
-	CLR P3.5
-	RET
-READ_RTC_MO10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #09H
-	MOVX A, @DPTR
-	MOV MO10, A
-	CLR P3.5
-	RET
-READ_RTC_Y1:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0AH
-	MOVX A, @DPTR
-	MOV Y1, A
-	CLR P3.5
-	RET
-READ_RTC_Y10:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0BH
-	MOVX A, @DPTR
-	MOV Y10, A
-	CLR P3.5
-	RET
-READ_RTC_W:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0CH
-	MOVX A, @DPTR
-	MOV W, A
-	CLR P3.5
-	RET
-READ_RTC_CD:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0DH
-	MOVX A, @DPTR
-	CLR P3.5
-	RET
-READ_RTC_CE:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0EH
-	MOVX A, @DPTR
-	CLR P3.5
-	RET
-READ_RTC_CF:
-	SETB P3.5
-	MOV DPH, #RTCADDRH
-	MOV DPL, #0FH
-	MOVX A, @DPTR
+	MOV DPL, R0			; Set lower address
+	MOVX A, @DPTR		; Do read
+	MOV @R0, A		; Store read
 	CLR P3.5
 	RET
 ;******
 ;* ADC Interface
 ;* Procedures that deal with interfacing with the ADC
+;******
+;******
+;* Read ADC Conversion Function
+;* tells the ADC to perform a conversion waits 1ms and reads the conversion
 ;******
 READ_CONVERSION:
 	SETB P3.5
@@ -511,6 +310,26 @@ READ_CONVERSION:
 ;* LCD Interface
 ;* Procedures that deal with interfacing with the LCD
 ;******
+;******
+;* Write to LCD DATA and wait function
+;* Combiner function that writes to the LCD and waits while the LCD is not busy
+;******
+WRITE_TO_LCD_DATA_WAIT:
+	ACALL WHILE_LCD_BUSY
+	ACALL WRITE_TO_LCD_DATA
+	RET
+;******
+;* Write to LCD CMD and wait function
+;* Combiner function that writes to the LCD and waits while the LCD is not busy
+;******
+WRITE_TO_LCD_CMD_WAIT:
+	ACALL WHILE_LCD_BUSY
+	ACALL WRITE_TO_LCD_CMD
+	RET
+;******
+;* LCD command write function
+;* Writes data stored in A to the LCD CMD register
+;******
 WRITE_TO_LCD_CMD:
 	SETB P3.5
 	MOV DPH, #LCDADDRH
@@ -518,6 +337,10 @@ WRITE_TO_LCD_CMD:
 	MOVX @DPTR, A		;Write what is stored in A
 	CLR P3.5
 	RET
+;******
+;* LCD data write function
+;* Writes data stored in A to the LCD data register
+;******
 WRITE_TO_LCD_DATA:
 	SETB P3.5
 	MOV DPH, #LCDADDRH
@@ -525,6 +348,10 @@ WRITE_TO_LCD_DATA:
 	MOVX @DPTR, A		;Write what is stored in A
 	CLR P3.5
 	RET
+;******
+;* LCD control read function
+;* Reads the LCD control register
+;******
 READ_FROM_LCD_CMD:
 	SETB P3.5
 	MOV DPH, #LCDADDRH
@@ -549,17 +376,17 @@ CURSOR_HOME:
 	ACALL WRITE_TO_LCD_CMD
 	RET
 ;*******
-;* Is LCD Busy function
+;* While LCD Busy function
 ;* Loops while the LCD is BUSY
 ;*******	
-IS_LCD_BUSY:
+WHILE_LCD_BUSY:
  	ACALL READ_FROM_LCD_CMD		;Read LCD controller
- 	ANL A, #80H			;Mask BF
- 	JNZ IS_LCD_BUSY
+ 	ANL A, #80H					;Mask Busy Flag
+ 	JNZ WHILE_LCD_BUSY
  	RET
 ;*******
 ;* LCD Init
-;* Initializes the LCD with the follwing specs ()
+;* Initializes the LCD with the follwing specs (TBD)
 ;********
 INIT_LCD:
 	MOV A, #00111100B		;Function set
@@ -593,13 +420,13 @@ INIT_LCD:
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
 	MOV A, #01000000B
-	ACALL WRITE_TO_LCD_CMD		;CG RAM
+	ACALL WRITE_TO_LCD_CMD	;CG RAM
 	MOV A, #0DFH			;Status Mraker
 	ACALL WRITE_TO_7SEG
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
 	MOV A, #10000000B
-	ACALL WRITE_TO_LCD_CMD		;DDR RAM
+	ACALL WRITE_TO_LCD_CMD	;DDR RAM
 	MOV A, #0BFH			;Status marer
 	ACALL WRITE_TO_7SEG
 	ACALL DELAY_1MS
@@ -611,7 +438,7 @@ INIT_LCD:
 	RET
 ;******
 ;* Binary to BCD converter function
-;* ConeVrts an 8 bit binary in A to 4 bit BCD
+;* Converts an 8 bit binary in A to 4 bit BCD
 ;* Stores the result in ram adresses 0CH, 0DH, 0EH
 ;*****		
 BINARY_TO_BCD:
@@ -638,7 +465,7 @@ BINARY_TO_BCD:
 ;*********
 IS_LESS_OR_EQUAL:
 	PUSH 0E0H
-	MOV PSW, #00H		;Clear PSW to not alter subb
+	MOV PSW, #00H	;Clear PSW to not alter subb
 	SUBB A, B		;A > B
 	MOV F0, C		;Set based on carry
 	CPL F0	
@@ -651,12 +478,16 @@ IS_LESS_OR_EQUAL:
 L3TO8:
 	MOV A, KPR3R4		; Load R3, R4 data
 	CPL A
-	ANL A, #07H		; Wipe all but last three keys  (C, B, A)
+	ANL A, #07H			; Wipe all but last three keys  (C, B, A)
 	MOV DPTR, #SEGTABLE	; Mov dptr to segment table
 	MOVC A, @A+DPTR		; Load
 	RET
+;*********
+;* EX RAM test
+;* Function for testing the External ram of the system
+;********
 RAM_TEST:
-	CLR P3.5
+	CLR P3.5			; Move to memory map
 	MOV DPTR, #0F0FFH
 	MOV A, #'Z'
 	MOVX @DPTR, A
@@ -665,63 +496,63 @@ RAM_TEST:
 	MOVX @DPTR, A
 	MOVX A, @DPTR
 	ACALL WRITE_TO_LCD_DATA
-	ACALL IS_LCD_BUSY
+	ACALL WHILE_LCD_BUSY
 	MOV DPTR, #0F0FFH
 	MOVX A, @DPTR
 	ACALL WRITE_TO_LCD_DATA
-	ACALL IS_LCD_BUSY
+	ACALL WHILE_LCD_BUSY
 	MOV A, #'D'
 	ACALL WRITE_TO_LCD_DATA
-	ACALL IS_LCD_BUSY
+	ACALL WHILE_LCD_BUSY
 	RET
 ;*****
 ;* do a conversion
 ;* Dumb function that does a conversion and displays the value scanned if * key was pressed
 ;******
 DO_CONVERSION:
-	MOV A, KPR1R2		;Check to see if star was pressed
+	MOV A, KPR1R2			; Check to see if star was pressed
 	CPL A
 	ANL A, #80H
-	JZ  END_DO_CONVERSION	;* was not pressed
+	JZ  END_DO_CONVERSION	; * was not pressed
 CONVERSION_LOOP:
-	ACALL KEYPAD_SCAN	;# Is pressed loop untill it is not pressed
-	ACALL KEYPAD_SCAN	;Allow for bouncing
+	ACALL KEYPAD_SCAN		; * Is pressed loop untill it is not pressed
+	ACALL KEYPAD_SCAN		; Allow for bouncing
 	ACALL KEYPAD_SCAN	
 	MOV A, KPR1R2
 	CPL A
 	ANL A, #80H
-	JNZ CONVERSION_LOOP	;# still pressed
+	JNZ CONVERSION_LOOP		; # still pressed
 	ACALL READ_CONVERSION	; Start conversion and display
-	MOV A, LAST_CONV	; Load last conversion value
+	MOV A, LAST_CONV		; Load last conversion value
 	MOV B, #TEMPR_CONST
-	MUL AB			;LSB store in ACC
+	MUL AB					; LSB store in ACC
 	MOV B, #10		
-	DIV AB			;Divide by 10 cuz
-	ACALL BINARY_TO_BCD	; Convert to BCD to print
-	ACALL CLEAR_LCD		; Reset LCD
-	ACALL IS_LCD_BUSY
+	DIV AB					; Divide by 10 to convert from volts to Celsius 
+	ACALL BINARY_TO_BCD		; Convert to BCD to print
+	ACALL CLEAR_LCD			; Reset LCD
+	ACALL WHILE_LCD_BUSY
 	ACALL CURSOR_HOME
-	ACALL IS_LCD_BUSY
-	MOV A, HUNDREDS		;Write 100s
+	ACALL WHILE_LCD_BUSY
+	MOV A, HUNDREDS			; Write 100s
 	ORL A, #30H
 	ACALL WRITE_TO_LCD_DATA
-	ACALL IS_LCD_BUSY
-	MOV A, TENS		;Write 10s
+	ACALL WHILE_LCD_BUSY
+	MOV A, TENS				; Write 10s
 	ORL A, #30H
 	ACALL WRITE_TO_LCD_DATA
-	ACALL IS_LCD_BUSY
-	MOV A, ONES		;Write 1s
+	ACALL WHILE_LCD_BUSY
+	MOV A, ONES				; Write 1s
 	ORL A, #30H
 	ACALL WRITE_TO_LCD_DATA
-	ACALL IS_LCD_BUSY
+	ACALL WHILE_LCD_BUSY
 	MOV A, MI10
 	ORL A, #30H
 	ACALL WRITE_TO_LCD_DATA
-	ACALL IS_LCD_BUSY
+	ACALL WHILE_LCD_BUSY
 	MOV A, MI1
 	ORL A, #30H
 	ACALL WRITE_TO_LCD_DATA
-	ACALL IS_LCD_BUSY
+	ACALL WHILE_LCD_BUSY
 	;End do conversion and display
 END_DO_CONVERSION:
 	RET	
