@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.6.3">
+<eagle version="8.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
@@ -3183,32 +3183,50 @@ square</description>
 </polygon>
 </symbol>
 <symbol name="SER3231-ND">
-<wire x1="-5.08" y1="11.43" x2="-5.08" y2="-11.43" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="-11.43" x2="5.08" y2="-11.43" width="0.254" layer="94"/>
-<wire x1="5.08" y1="-11.43" x2="5.08" y2="11.43" width="0.254" layer="94"/>
-<wire x1="5.08" y1="11.43" x2="2.54" y2="11.43" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="11.43" x2="-2.54" y2="11.43" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="11.43" x2="2.54" y2="11.43" width="0.254" layer="94" curve="180"/>
-<text x="-4.445" y="12.065" size="1.778" layer="95">&gt;NAME</text>
-<text x="-4.445" y="-13.97" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="1" x="-7.62" y="10.16" visible="pad" length="short" direction="pas"/>
-<pin name="2" x="-7.62" y="7.62" visible="pad" length="short" direction="pas"/>
-<pin name="3" x="-7.62" y="5.08" visible="pad" length="short" direction="pas"/>
-<pin name="4" x="-7.62" y="2.54" visible="pad" length="short" direction="pas"/>
-<pin name="5" x="-7.62" y="0" visible="pad" length="short" direction="pas"/>
-<pin name="6" x="-7.62" y="-2.54" visible="pad" length="short" direction="pas"/>
-<pin name="7" x="-7.62" y="-5.08" visible="pad" length="short" direction="pas"/>
-<pin name="8" x="-7.62" y="-7.62" visible="pad" length="short" direction="pas"/>
-<pin name="9" x="-7.62" y="-10.16" visible="pad" length="short" direction="pas"/>
-<pin name="10" x="7.62" y="-10.16" visible="pad" length="short" direction="pas" rot="R180"/>
-<pin name="11" x="7.62" y="-7.62" visible="pad" length="short" direction="pas" rot="R180"/>
-<pin name="12" x="7.62" y="-5.08" visible="pad" length="short" direction="pas" rot="R180"/>
-<pin name="13" x="7.62" y="-2.54" visible="pad" length="short" direction="pas" rot="R180"/>
-<pin name="14" x="7.62" y="0" visible="pad" length="short" direction="pas" rot="R180"/>
-<pin name="15" x="7.62" y="2.54" visible="pad" length="short" direction="pas" rot="R180"/>
-<pin name="16" x="7.62" y="5.08" visible="pad" length="short" direction="pas" rot="R180"/>
-<pin name="17" x="7.62" y="7.62" visible="pad" length="short" direction="pas" rot="R180"/>
-<pin name="18" x="7.62" y="10.16" visible="pad" length="short" direction="pas" rot="R180"/>
+<wire x1="-7.62" y1="13.97" x2="-7.62" y2="-13.97" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="-13.97" x2="7.62" y2="-13.97" width="0.254" layer="94"/>
+<wire x1="7.62" y1="-13.97" x2="7.62" y2="13.97" width="0.254" layer="94"/>
+<wire x1="7.62" y1="13.97" x2="2.54" y2="13.97" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="13.97" x2="-2.54" y2="13.97" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="13.97" x2="2.54" y2="13.97" width="0.254" layer="94" curve="180"/>
+<text x="-4.445" y="14.605" size="1.778" layer="95">&gt;NAME</text>
+<text x="-4.445" y="-16.51" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="1" x="-10.16" y="10.16" visible="pad" length="short" direction="pas"/>
+<pin name="2" x="-10.16" y="7.62" visible="pad" length="short" direction="pas"/>
+<pin name="3" x="-10.16" y="5.08" visible="pad" length="short" direction="pas"/>
+<pin name="4" x="-10.16" y="2.54" visible="pad" length="short" direction="pas"/>
+<pin name="5" x="-10.16" y="0" visible="pad" length="short" direction="pas"/>
+<pin name="6" x="-10.16" y="-2.54" visible="pad" length="short" direction="pas"/>
+<pin name="7" x="-10.16" y="-5.08" visible="pad" length="short" direction="pas"/>
+<pin name="8" x="-10.16" y="-7.62" visible="pad" length="short" direction="pas"/>
+<pin name="9" x="-10.16" y="-10.16" visible="pad" length="short" direction="pas"/>
+<pin name="10" x="10.16" y="-10.16" visible="pad" length="short" direction="pas" rot="R180"/>
+<pin name="11" x="10.16" y="-7.62" visible="pad" length="short" direction="pas" rot="R180"/>
+<pin name="12" x="10.16" y="-5.08" visible="pad" length="short" direction="pas" rot="R180"/>
+<pin name="13" x="10.16" y="-2.54" visible="pad" length="short" direction="pas" rot="R180"/>
+<pin name="14" x="10.16" y="0" visible="pad" length="short" direction="pas" rot="R180"/>
+<pin name="15" x="10.16" y="2.54" visible="pad" length="short" direction="pas" rot="R180"/>
+<pin name="16" x="10.16" y="5.08" visible="pad" length="short" direction="pas" rot="R180"/>
+<pin name="17" x="10.16" y="7.62" visible="pad" length="short" direction="pas" rot="R180"/>
+<pin name="18" x="10.16" y="10.16" visible="pad" length="short" direction="pas" rot="R180"/>
+<text x="-5.08" y="10.16" size="1.27" layer="96">STD.P</text>
+<text x="-5.08" y="7.62" size="1.27" layer="96">CS0</text>
+<text x="-5.08" y="5.08" size="1.27" layer="96">ALE</text>
+<text x="-5.08" y="2.54" size="1.27" layer="96">A0</text>
+<text x="-5.08" y="0" size="1.27" layer="96">A1</text>
+<text x="-5.08" y="-2.54" size="1.27" layer="96">A2</text>
+<text x="-5.08" y="-5.08" size="1.27" layer="96">A3</text>
+<text x="-5.08" y="-7.62" size="1.27" layer="96">RD</text>
+<text x="-5.08" y="-10.16" size="1.27" layer="96">GND</text>
+<text x="5.08" y="10.16" size="1.27" layer="96" align="bottom-right">VDD</text>
+<text x="5.08" y="7.62" size="1.27" layer="96" align="bottom-right">NC</text>
+<text x="5.08" y="5.08" size="1.27" layer="96" align="bottom-right">NC</text>
+<text x="5.08" y="2.54" size="1.27" layer="96" align="bottom-right">CS1</text>
+<text x="5.08" y="0" size="1.27" layer="96" align="bottom-right">D0</text>
+<text x="5.08" y="-2.54" size="1.27" layer="96" align="bottom-right">D1</text>
+<text x="5.08" y="-5.08" size="1.27" layer="96" align="bottom-right">D2</text>
+<text x="5.08" y="-7.62" size="1.27" layer="96" align="bottom-right">D3</text>
+<text x="5.08" y="-10.16" size="1.27" layer="96" align="bottom-right">WR</text>
 </symbol>
 <symbol name="POT">
 <pin name="1" x="0" y="0" visible="off" length="short" direction="pas"/>
@@ -3344,14 +3362,14 @@ square</description>
 <pin name="P22-A10" x="20.32" y="17.78" length="middle" rot="R180"/>
 <pin name="P21-A9" x="20.32" y="15.24" length="middle" rot="R180"/>
 <pin name="P20-A8" x="20.32" y="12.7" length="middle" rot="R180"/>
-<pin name="P07-AD7" x="20.32" y="5.08" length="middle" rot="R180"/>
-<pin name="P06-AD6" x="20.32" y="2.54" length="middle" rot="R180"/>
-<pin name="P05-AD5" x="20.32" y="0" length="middle" rot="R180"/>
-<pin name="P04-AD4" x="20.32" y="-2.54" length="middle" rot="R180"/>
-<pin name="P03-AD3" x="20.32" y="-5.08" length="middle" rot="R180"/>
-<pin name="P02-AD2" x="20.32" y="-7.62" length="middle" rot="R180"/>
-<pin name="P01-AD1" x="20.32" y="-10.16" length="middle" rot="R180"/>
-<pin name="P00-AD0" x="20.32" y="-12.7" length="middle" rot="R180"/>
+<pin name="P07-AD7" x="20.32" y="-12.7" length="middle" rot="R180"/>
+<pin name="P06-AD6" x="20.32" y="-10.16" length="middle" rot="R180"/>
+<pin name="P05-AD5" x="20.32" y="-7.62" length="middle" rot="R180"/>
+<pin name="P04-AD4" x="20.32" y="-5.08" length="middle" rot="R180"/>
+<pin name="P03-AD3" x="20.32" y="-2.54" length="middle" rot="R180"/>
+<pin name="P02-AD2" x="20.32" y="0" length="middle" rot="R180"/>
+<pin name="P01-AD1" x="20.32" y="2.54" length="middle" rot="R180"/>
+<pin name="P00-AD0" x="20.32" y="5.08" length="middle" rot="R180"/>
 <pin name="ALE" x="20.32" y="-20.32" length="middle" direction="out" rot="R180"/>
 <pin name="PSEN" x="20.32" y="-25.4" length="middle" direction="out" rot="R180"/>
 <pin name="P37-RD" x="20.32" y="-30.48" length="middle" rot="R180"/>
