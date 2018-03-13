@@ -36,8 +36,8 @@ module chip_select(PSEN, WR, RD, A15, A14, A13, P3_5,
 	assign COLOR_CS =  ~ WR & P3_5 & PSEN & ~A15 & A14 & ~A13 
 	
 	// Memory logic
-	assign ROM1CS = P3_5 | PSEN | A15;
-	assign ROM2CS = P3_5 | PSEN | ~A15;
+	assign ROM1CS = PSEN | A15;
+	assign ROM2CS = PSEN | ~A15;
 	assign RAM1CS = P3_5 | ~PSEN | A15;
 	assign RAM2CS = P3_5 | ~PSEN  | ~A15;
 	
