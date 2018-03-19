@@ -12,7 +12,7 @@ ADCADDRH EQU 60H
 RTCADDRH EQU 80H
 LAST_WRITE EQU 0AH
 TEMPR_CONST EQU 18		; Constant used for temperature conversion
-S1 EQU 20H				; Constants used for RTC Registers
+S1 EQU 20H						; Constants used for RTC Registers
 S10 EQU 21H
 MI1 EQU 22H
 MI10 EQU 23H
@@ -472,7 +472,7 @@ INIT_LCD:
 	ACALL DELAY_1MS
 	RET
 ;******
-;* Binary to BCD converter function
+;* Binary to BCD converter function (TODO)
 ;* Converts an 8 bit binary in A to 4 bit BCD
 ;* Stores the result in ram adresses 0CH, 0DH, 0EH
 ;*****		
