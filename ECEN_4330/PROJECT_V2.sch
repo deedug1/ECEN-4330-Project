@@ -8,34 +8,34 @@
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="yes" active="no"/>
-<layer number="2" name="Route2" color="1" fill="3" visible="yes" active="no"/>
-<layer number="3" name="Route3" color="4" fill="3" visible="yes" active="no"/>
-<layer number="4" name="Route4" color="1" fill="4" visible="yes" active="no"/>
-<layer number="5" name="Route5" color="4" fill="4" visible="yes" active="no"/>
-<layer number="6" name="Route6" color="1" fill="8" visible="yes" active="no"/>
-<layer number="7" name="Route7" color="4" fill="8" visible="yes" active="no"/>
-<layer number="8" name="Route8" color="1" fill="2" visible="yes" active="no"/>
-<layer number="9" name="Route9" color="4" fill="2" visible="yes" active="no"/>
-<layer number="10" name="Route10" color="1" fill="7" visible="yes" active="no"/>
-<layer number="11" name="Route11" color="4" fill="7" visible="yes" active="no"/>
-<layer number="12" name="Route12" color="1" fill="5" visible="yes" active="no"/>
-<layer number="13" name="Route13" color="4" fill="5" visible="yes" active="no"/>
-<layer number="14" name="Route14" color="1" fill="6" visible="yes" active="no"/>
-<layer number="15" name="Route15" color="4" fill="6" visible="yes" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="no"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="no"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="no"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="no"/>
-<layer number="20" name="Dimension" color="24" fill="1" visible="yes" active="no"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="no"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="no"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="no"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="no"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="no"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="no"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="no"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="no"/>
+<layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
+<layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
+<layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
+<layer number="6" name="Route6" color="1" fill="8" visible="no" active="no"/>
+<layer number="7" name="Route7" color="4" fill="8" visible="no" active="no"/>
+<layer number="8" name="Route8" color="1" fill="2" visible="no" active="no"/>
+<layer number="9" name="Route9" color="4" fill="2" visible="no" active="no"/>
+<layer number="10" name="Route10" color="1" fill="7" visible="no" active="no"/>
+<layer number="11" name="Route11" color="4" fill="7" visible="no" active="no"/>
+<layer number="12" name="Route12" color="1" fill="5" visible="no" active="no"/>
+<layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
+<layer number="20" name="Dimension" color="24" fill="1" visible="no" active="no"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="no"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="no"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="no" active="no"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="no" active="no"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="no" active="no"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="no" active="no"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="no"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="no"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="no"/>
@@ -44,8 +44,8 @@
 <layer number="34" name="bFinish" color="6" fill="6" visible="no" active="no"/>
 <layer number="35" name="tGlue" color="7" fill="4" visible="no" active="no"/>
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="no"/>
-<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="no"/>
-<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="no"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="no" active="no"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="no" active="no"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="no"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="no"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="no"/>
@@ -53,19 +53,19 @@
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="no"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="no"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="no"/>
-<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="no"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="no"/>
-<layer number="48" name="Document" color="7" fill="1" visible="yes" active="no"/>
-<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="no"/>
-<layer number="50" name="dxf" color="7" fill="1" visible="yes" active="no"/>
-<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="no"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="no"/>
-<layer number="53" name="tGND_GNDA" color="7" fill="9" visible="yes" active="no"/>
-<layer number="54" name="bGND_GNDA" color="1" fill="9" visible="yes" active="no"/>
-<layer number="56" name="wert" color="7" fill="1" visible="yes" active="no"/>
-<layer number="57" name="tCAD" color="7" fill="1" visible="yes" active="no"/>
-<layer number="59" name="tCarbon" color="7" fill="1" visible="yes" active="no"/>
-<layer number="60" name="bCarbon" color="7" fill="1" visible="yes" active="no"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="no" active="no"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="no"/>
+<layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
+<layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="no"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
+<layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
+<layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
+<layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
+<layer number="57" name="tCAD" color="7" fill="1" visible="no" active="no"/>
+<layer number="59" name="tCarbon" color="7" fill="1" visible="no" active="no"/>
+<layer number="60" name="bCarbon" color="7" fill="1" visible="no" active="no"/>
 <layer number="88" name="SimResults" color="9" fill="1" visible="yes" active="yes"/>
 <layer number="89" name="SimProbes" color="9" fill="1" visible="yes" active="yes"/>
 <layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
@@ -20367,13 +20367,6 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <wire x1="139.7" y1="175.26" x2="142.24" y2="177.8" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="A7" class="0">
-<segment>
-<pinref part="DEMULTIPLEXER" gate="A" pin="1Q"/>
-<wire x1="137.16" y1="149.86" x2="139.7" y2="149.86" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="149.86" x2="142.24" y2="152.4" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="A14" class="0">
 <segment>
 <pinref part="MICROCONTROLLER" gate="G$1" pin="P26-A14"/>
@@ -20423,53 +20416,36 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <wire x1="139.7" y1="157.48" x2="142.24" y2="160.02" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="A6" class="0">
-<segment>
-<pinref part="DEMULTIPLEXER" gate="A" pin="2Q"/>
-<wire x1="137.16" y1="147.32" x2="139.7" y2="147.32" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="147.32" x2="142.24" y2="149.86" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="A5" class="0">
-<segment>
-<pinref part="DEMULTIPLEXER" gate="A" pin="3Q"/>
-<wire x1="137.16" y1="144.78" x2="139.7" y2="144.78" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="144.78" x2="142.24" y2="147.32" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="A4" class="0">
+<net name="A3" class="0">
 <segment>
 <pinref part="DEMULTIPLEXER" gate="A" pin="4Q"/>
 <wire x1="137.16" y1="142.24" x2="139.7" y2="142.24" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="142.24" x2="142.24" y2="144.78" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="A3" class="0">
-<segment>
-<pinref part="DEMULTIPLEXER" gate="A" pin="5Q"/>
-<wire x1="137.16" y1="139.7" x2="139.7" y2="139.7" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="139.7" x2="142.24" y2="142.24" width="0.1524" layer="91"/>
+<label x="137.16" y="142.24" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="A2" class="0">
 <segment>
-<pinref part="DEMULTIPLEXER" gate="A" pin="6Q"/>
-<wire x1="137.16" y1="137.16" x2="139.7" y2="137.16" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="137.16" x2="142.24" y2="139.7" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="3Q"/>
+<wire x1="137.16" y1="144.78" x2="139.7" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="144.78" x2="142.24" y2="147.32" width="0.1524" layer="91"/>
+<label x="137.16" y="144.78" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="A1" class="0">
 <segment>
-<pinref part="DEMULTIPLEXER" gate="A" pin="7Q"/>
-<wire x1="137.16" y1="134.62" x2="139.7" y2="134.62" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="134.62" x2="142.24" y2="137.16" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="2Q"/>
+<wire x1="137.16" y1="147.32" x2="139.7" y2="147.32" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="147.32" x2="142.24" y2="149.86" width="0.1524" layer="91"/>
+<label x="137.16" y="147.32" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="A0" class="0">
 <segment>
-<pinref part="DEMULTIPLEXER" gate="A" pin="8Q"/>
-<wire x1="137.16" y1="132.08" x2="139.7" y2="132.08" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="132.08" x2="142.24" y2="134.62" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="A" pin="1Q"/>
+<wire x1="137.16" y1="149.86" x2="139.7" y2="149.86" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="149.86" x2="142.24" y2="152.4" width="0.1524" layer="91"/>
+<label x="137.16" y="149.86" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -20523,44 +20499,49 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <pinref part="RSTSWITCH" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="N$18" class="0">
+<net name="RXD" class="0">
 <segment>
 <pinref part="MICROCONTROLLER" gate="G$1" pin="P30-RXD"/>
 <pinref part="JPM" gate="A" pin="1"/>
 <wire x1="35.56" y1="121.92" x2="22.86" y2="121.92" width="0.1524" layer="91"/>
 <wire x1="22.86" y1="121.92" x2="22.86" y2="96.52" width="0.1524" layer="91"/>
+<label x="22.86" y="101.6" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$19" class="0">
+<net name="TXD" class="0">
 <segment>
 <pinref part="MICROCONTROLLER" gate="G$1" pin="P31-TXD"/>
 <pinref part="JPM" gate="A" pin="2"/>
 <wire x1="35.56" y1="119.38" x2="20.32" y2="119.38" width="0.1524" layer="91"/>
 <wire x1="20.32" y1="119.38" x2="20.32" y2="96.52" width="0.1524" layer="91"/>
+<label x="20.32" y="101.6" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$20" class="0">
+<net name="INT0" class="0">
 <segment>
 <pinref part="MICROCONTROLLER" gate="G$1" pin="P32-INT0"/>
 <pinref part="JPM" gate="A" pin="3"/>
 <wire x1="35.56" y1="116.84" x2="17.78" y2="116.84" width="0.1524" layer="91"/>
 <wire x1="17.78" y1="116.84" x2="17.78" y2="96.52" width="0.1524" layer="91"/>
+<label x="17.78" y="101.6" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$21" class="0">
+<net name="INT1" class="0">
 <segment>
 <pinref part="MICROCONTROLLER" gate="G$1" pin="P33-INT1"/>
 <wire x1="35.56" y1="114.3" x2="15.24" y2="114.3" width="0.1524" layer="91"/>
 <pinref part="JPM" gate="A" pin="4"/>
 <wire x1="15.24" y1="114.3" x2="15.24" y2="96.52" width="0.1524" layer="91"/>
+<label x="15.24" y="101.6" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="N$22" class="0">
+<net name="T0" class="0">
 <segment>
 <pinref part="MICROCONTROLLER" gate="G$1" pin="P34-T0"/>
 <wire x1="35.56" y1="111.76" x2="12.7" y2="111.76" width="0.1524" layer="91"/>
 <pinref part="JPM" gate="A" pin="5"/>
 <wire x1="12.7" y1="111.76" x2="12.7" y2="96.52" width="0.1524" layer="91"/>
+<label x="12.7" y="101.6" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
 <net name="P3.5" class="0">
@@ -20727,6 +20708,38 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <wire x1="35.56" y1="147.32" x2="33.02" y2="149.86" width="0.1524" layer="91"/>
 </segment>
 </net>
+<net name="A4" class="0">
+<segment>
+<pinref part="DEMULTIPLEXER" gate="A" pin="5Q"/>
+<wire x1="137.16" y1="139.7" x2="139.7" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="139.7" x2="142.24" y2="142.24" width="0.1524" layer="91"/>
+<label x="137.16" y="139.7" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="A5" class="0">
+<segment>
+<pinref part="DEMULTIPLEXER" gate="A" pin="6Q"/>
+<wire x1="137.16" y1="137.16" x2="139.7" y2="137.16" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="137.16" x2="142.24" y2="139.7" width="0.1524" layer="91"/>
+<label x="137.16" y="137.16" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="A6" class="0">
+<segment>
+<pinref part="DEMULTIPLEXER" gate="A" pin="7Q"/>
+<wire x1="137.16" y1="134.62" x2="139.7" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="134.62" x2="142.24" y2="137.16" width="0.1524" layer="91"/>
+<label x="137.16" y="134.62" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="A7" class="0">
+<segment>
+<pinref part="DEMULTIPLEXER" gate="A" pin="8Q"/>
+<wire x1="137.16" y1="132.08" x2="139.7" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="132.08" x2="142.24" y2="134.62" width="0.1524" layer="91"/>
+<label x="137.16" y="132.08" size="1.778" layer="95"/>
+</segment>
+</net>
 </nets>
 </sheet>
 </sheets>
@@ -20765,16 +20778,16 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">Chip select</text>
-<text x="81.28" y="167.64" size="1.778" layer="97">= ~WR &amp; P3.5 &amp; PSEN &amp; ~A15 &amp; ~A14</text>
-<text x="76.2" y="165.1" size="1.778" layer="97">= ~P3.5 + ~PSEN + ~A15 + ~A14</text>
-<text x="78.74" y="144.78" size="1.778" layer="97">= ~P3.5 + ~PSEN + ~A15 + A14</text>
+<text x="81.28" y="165.1" size="1.778" layer="97">= ~WR &amp; P3.5 &amp; PSEN &amp; ~A15 &amp; ~A14</text>
+<text x="78.74" y="154.94" size="1.778" layer="97">= ~P3.5 + ~PSEN + ~A15 + ~A14</text>
+<text x="78.74" y="157.48" size="1.778" layer="97">= ~P3.5 + ~PSEN + ~A15 + A14</text>
 <text x="76.2" y="162.56" size="1.778" layer="97">= ~P3.5 + ~PSEN + A15 + ~A14 + (WR &amp; RD)</text>
-<text x="78.74" y="147.32" size="1.778" layer="97">= P3.5 + ~PSEN + ~A15</text>
-<text x="78.74" y="149.86" size="1.778" layer="97">= P3.5 + ~PSEN + A15</text>
-<text x="78.74" y="152.4" size="1.778" layer="97">= PSEN + ~A15</text>
-<text x="78.74" y="154.94" size="1.778" layer="97">= PSEN + A15</text>
+<text x="78.74" y="144.78" size="1.778" layer="97">= P3.5 + ~PSEN + ~A15</text>
+<text x="78.74" y="147.32" size="1.778" layer="97">= P3.5 + ~PSEN + A15</text>
+<text x="78.74" y="149.86" size="1.778" layer="97">= PSEN + ~A15</text>
+<text x="78.74" y="152.4" size="1.778" layer="97">= PSEN + A15</text>
 <text x="27.94" y="132.08" size="1.778" layer="97">PSEN Must be high for this to work during external memory access</text>
-<text x="81.28" y="160.02" size="1.778" layer="97">= P3.5 &amp; PSEN &amp; A13 &amp; ~A14 &amp; ~A15 &amp; ~WR</text>
+<text x="78.74" y="160.02" size="1.778" layer="97">= P3.5 &amp; PSEN &amp; A13 &amp; ~A14 &amp; ~A15 &amp; ~WR</text>
 </plain>
 <instances>
 <instance part="FRAME4" gate="G$1" x="0" y="0"/>
@@ -20794,60 +20807,11 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <wire x1="38.1" y1="172.72" x2="27.94" y2="172.72" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="ADCCS" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="O0"/>
-<wire x1="63.5" y1="144.78" x2="68.58" y2="144.78" width="0.1524" layer="91"/>
-<label x="66.04" y="144.78" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="RAM2CS" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="O1"/>
-<wire x1="63.5" y1="147.32" x2="68.58" y2="147.32" width="0.1524" layer="91"/>
-<label x="66.04" y="147.32" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="RAM1CS" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="O2"/>
-<wire x1="63.5" y1="149.86" x2="68.58" y2="149.86" width="0.1524" layer="91"/>
-<label x="66.04" y="149.86" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="ROM2CS" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="O3"/>
-<wire x1="63.5" y1="152.4" x2="68.58" y2="152.4" width="0.1524" layer="91"/>
-<label x="66.04" y="152.4" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="ROM1CS" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="O4"/>
-<wire x1="63.5" y1="154.94" x2="68.58" y2="154.94" width="0.1524" layer="91"/>
-<label x="66.04" y="154.94" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="LCDCS" class="0">
 <segment>
 <pinref part="CSLOGIC" gate="G$1" pin="O7"/>
 <wire x1="63.5" y1="162.56" x2="68.58" y2="162.56" width="0.1524" layer="91"/>
 <label x="66.04" y="162.56" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="RTCCS" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="O8"/>
-<wire x1="63.5" y1="165.1" x2="68.58" y2="165.1" width="0.1524" layer="91"/>
-<label x="66.04" y="165.1" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="7SEGCSWR" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="O9"/>
-<wire x1="63.5" y1="167.64" x2="68.58" y2="167.64" width="0.1524" layer="91"/>
-<label x="66.04" y="167.64" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="PSEN" class="0">
@@ -20883,27 +20847,6 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <pinref part="CSLOGIC" gate="G$1" pin="O6"/>
 <wire x1="63.5" y1="160.02" x2="68.58" y2="160.02" width="0.1524" layer="91"/>
 <label x="66.04" y="160.02" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="WR" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="I4"/>
-<wire x1="38.1" y1="157.48" x2="33.02" y2="157.48" width="0.1524" layer="91"/>
-<label x="30.48" y="157.48" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="RD" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="I5"/>
-<wire x1="38.1" y1="154.94" x2="33.02" y2="154.94" width="0.1524" layer="91"/>
-<label x="30.48" y="154.94" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="P3.5" class="0">
-<segment>
-<pinref part="CSLOGIC" gate="G$1" pin="I6"/>
-<wire x1="38.1" y1="152.4" x2="33.02" y2="152.4" width="0.1524" layer="91"/>
-<label x="30.48" y="152.4" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -20952,6 +20895,76 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <segment>
 <pinref part="CSLOGIC" gate="G$1" pin="I10"/>
 <wire x1="38.1" y1="142.24" x2="33.02" y2="142.24" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="P3.5" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="I4"/>
+<wire x1="38.1" y1="157.48" x2="33.02" y2="157.48" width="0.1524" layer="91"/>
+<label x="30.48" y="157.48" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="WR" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="I5"/>
+<wire x1="38.1" y1="154.94" x2="33.02" y2="154.94" width="0.1524" layer="91"/>
+<label x="30.48" y="154.94" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="RD" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="I6"/>
+<wire x1="38.1" y1="152.4" x2="33.02" y2="152.4" width="0.1524" layer="91"/>
+<label x="30.48" y="152.4" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="RAM2CS" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="O0"/>
+<wire x1="63.5" y1="144.78" x2="68.58" y2="144.78" width="0.1524" layer="91"/>
+<label x="66.04" y="144.78" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="RAM1CS" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="O1"/>
+<wire x1="63.5" y1="147.32" x2="68.58" y2="147.32" width="0.1524" layer="91"/>
+<label x="66.04" y="147.32" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="ROM2CS" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="O2"/>
+<wire x1="63.5" y1="149.86" x2="68.58" y2="149.86" width="0.1524" layer="91"/>
+<label x="66.04" y="149.86" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="ROM1CS" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="O3"/>
+<wire x1="63.5" y1="152.4" x2="68.58" y2="152.4" width="0.1524" layer="91"/>
+<label x="66.04" y="152.4" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="RTCCS" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="O4"/>
+<wire x1="63.5" y1="154.94" x2="68.58" y2="154.94" width="0.1524" layer="91"/>
+<label x="66.04" y="154.94" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="ADCCS" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="O5"/>
+<wire x1="63.5" y1="157.48" x2="68.58" y2="157.48" width="0.1524" layer="91"/>
+<label x="66.04" y="157.48" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="7SEGCSWR" class="0">
+<segment>
+<pinref part="CSLOGIC" gate="G$1" pin="O8"/>
+<wire x1="63.5" y1="165.1" x2="68.58" y2="165.1" width="0.1524" layer="91"/>
+<label x="66.04" y="165.1" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
