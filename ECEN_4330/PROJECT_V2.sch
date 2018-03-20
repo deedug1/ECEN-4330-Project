@@ -19890,8 +19890,8 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <instance part="P+9" gate="VCC" x="53.34" y="167.64"/>
 <instance part="GND7" gate="1" x="20.32" y="137.16"/>
 <instance part="RTC" gate="G$1" x="35.56" y="152.4"/>
-<instance part="C1" gate="G$1" x="71.12" y="157.48"/>
-<instance part="GND1" gate="1" x="71.12" y="149.86"/>
+<instance part="C1" gate="G$1" x="71.12" y="154.94"/>
+<instance part="GND1" gate="1" x="71.12" y="147.32"/>
 </instances>
 <busses>
 <bus name="D[0..7]">
@@ -19950,8 +19950,9 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <junction x="53.34" y="162.56"/>
 <pinref part="RTC" gate="G$1" pin="15"/>
 <pinref part="RTC" gate="G$1" pin="18"/>
+<wire x1="53.34" y1="162.56" x2="71.12" y2="162.56" width="0.1524" layer="91"/>
 <pinref part="C1" gate="G$1" pin="1"/>
-<wire x1="71.12" y1="162.56" x2="53.34" y2="162.56" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="162.56" x2="71.12" y2="160.02" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -19964,7 +19965,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <segment>
 <pinref part="GND1" gate="1" pin="GND"/>
 <pinref part="C1" gate="G$1" pin="2"/>
-<wire x1="71.12" y1="152.4" x2="71.12" y2="154.94" width="0.1524" layer="91"/>
+<wire x1="71.12" y1="149.86" x2="71.12" y2="152.4" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$25" class="0">
@@ -20260,6 +20261,9 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <part name="RSTSWITCH" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="MOMENTARY-SWITCH-SPST" device="-PTH-6.0MM" package3d_urn="urn:adsk.eagle:package:40163/1"/>
 <part name="C2" library="Fuckboiz" deviceset="0.1UF" device="-KIT-EZ-50V-20%" value="0.1uF"/>
 <part name="JPM" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X5" device="" package3d_urn="urn:adsk.eagle:package:22469/2"/>
+<part name="C3" library="Fuckboiz" deviceset="0.1UF" device="-KIT-EZ-50V-20%" value="0.1uF"/>
+<part name="SUPPLY2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="SUPPLY3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -20281,6 +20285,10 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 </instance>
 <instance part="C2" gate="G$1" x="5.08" y="157.48"/>
 <instance part="JPM" gate="A" x="17.78" y="93.98" rot="R270"/>
+<instance part="DEMULTIPLEXER" gate="P" x="124.46" y="101.6"/>
+<instance part="C3" gate="G$1" x="114.3" y="99.06" rot="MR0"/>
+<instance part="SUPPLY2" gate="1" x="124.46" y="86.36"/>
+<instance part="SUPPLY3" gate="VCC" x="124.46" y="116.84"/>
 </instances>
 <busses>
 <bus name="A[0..15]">
@@ -20341,6 +20349,15 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <wire x1="111.76" y1="124.46" x2="109.22" y2="124.46" width="0.1524" layer="91"/>
 <wire x1="109.22" y1="124.46" x2="109.22" y2="121.92" width="0.1524" layer="91"/>
 <pinref part="SUPPLY6" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="C3" gate="G$1" pin="2"/>
+<wire x1="114.3" y1="96.52" x2="114.3" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="88.9" x2="124.46" y2="88.9" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="P" pin="GND"/>
+<wire x1="124.46" y1="88.9" x2="124.46" y2="91.44" width="0.1524" layer="91"/>
+<pinref part="SUPPLY2" gate="1" pin="GND"/>
+<junction x="124.46" y="88.9"/>
 </segment>
 </net>
 <net name="A15" class="0">
@@ -20474,6 +20491,15 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <wire x1="5.08" y1="162.56" x2="5.08" y2="165.1" width="0.1524" layer="91"/>
 <wire x1="5.08" y1="165.1" x2="17.78" y2="165.1" width="0.1524" layer="91"/>
 <junction x="17.78" y="165.1"/>
+</segment>
+<segment>
+<pinref part="C3" gate="G$1" pin="1"/>
+<wire x1="114.3" y1="104.14" x2="114.3" y2="114.3" width="0.1524" layer="91"/>
+<pinref part="DEMULTIPLEXER" gate="P" pin="VCC"/>
+<wire x1="114.3" y1="114.3" x2="124.46" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="114.3" x2="124.46" y2="111.76" width="0.1524" layer="91"/>
+<pinref part="SUPPLY3" gate="VCC" pin="VCC"/>
+<junction x="124.46" y="114.3"/>
 </segment>
 </net>
 <net name="WR" class="0">
