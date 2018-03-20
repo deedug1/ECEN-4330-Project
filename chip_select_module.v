@@ -8,18 +8,18 @@ module chip_select(PSEN, WR, RD, A15, A14, A13, P3_5,
 	input A15;				/*synthesis loc="P3"*/
 	input A14;				/*synthesis loc="P4"*/
 	input A13;				/*synthesis loc="P5"*/
-	input WR;				/*synthesis loc="P6"*/
-	input RD;				/*synthesis loc="P7"*/
-	input P3_5;	 			/*synthesis loc="P8"*/
+	input P3_5;	 			/*synthesis loc="P6"*/
+	input WR;				/*synthesis loc="P7"*/
+	input RD;				/*synthesis loc="P8"*/
 	
 	
 	
 	// I/O Pin assignments
-	output SEGCSWR;		/*synthesis loc="P23"*/
-	output RTCCS;		/*synthesis loc="P22"*/
+	output SEGCSWR;		/*synthesis loc="P22"*/
 	output LCDCS;		/*synthesis loc="P21"*/
-	output ADCCS;		/*synthesis loc="P14"*/
 	output COLOR_CS;	/*synthesis loc="P20"*/
+	output ADCCS;		/*synthesis loc="P19"*/
+	output RTCCS;		/*synthesis loc="P18"*/
 	
 	// Memory Pin assignments
 	output ROM1CS;	/*synthesis loc="P18"*/
