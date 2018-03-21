@@ -8843,41 +8843,6 @@ Jeremiah Ohlman</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="supply2" urn="urn:adsk.eagle:library:372">
-<description>&lt;b&gt;Supply Symbols&lt;/b&gt;&lt;p&gt;
-GND, VCC, 0V, +5V, -5V, etc.&lt;p&gt;
-Please keep in mind, that these devices are necessary for the
-automatic wiring of the supply signals.&lt;p&gt;
-The pin name defined in the symbol is identical to the net which is to be wired automatically.&lt;p&gt;
-In this library the device names are the same as the pin names of the symbols, therefore the correct signal names appear next to the supply symbols in the schematic.&lt;p&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-</packages>
-<symbols>
-<symbol name="GND" urn="urn:adsk.eagle:symbol:26990/1" library_version="2">
-<wire x1="-1.27" y1="0" x2="1.27" y2="0" width="0.254" layer="94"/>
-<wire x1="1.27" y1="0" x2="0" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="0" y1="-1.27" x2="-1.27" y2="0" width="0.254" layer="94"/>
-<text x="-1.905" y="-3.175" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="GND" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="GND" urn="urn:adsk.eagle:component:27037/1" prefix="SUPPLY" library_version="2">
-<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
-<gates>
-<gate name="GND" symbol="GND" x="0" y="0"/>
-</gates>
-<devices>
-<device name="">
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="resistor" urn="urn:adsk.eagle:library:348">
 <description>&lt;b&gt;Resistors, Capacitors, Inductors&lt;/b&gt;&lt;p&gt;
 Based on the previous libraries:
@@ -18358,15 +18323,15 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <modules>
 <module name="CLOCK" prefix="" dx="30.48" dy="20.32">
 <ports>
-<port name="XTAL1" side="right" coord="7.62" direction="io"/>
 <port name="GND" side="left" coord="-7.62" direction="pwr"/>
 <port name="VCC" side="left" coord="-5.08" direction="pwr"/>
+<port name="CLKOUT" side="right" coord="7.62" direction="io"/>
 </ports>
 <variantdefs>
 </variantdefs>
 <parts>
 <part name="CLK" library="crystal" library_urn="urn:adsk.eagle:library:204" deviceset="XO-" device="8" package3d_urn="urn:adsk.eagle:package:12069/1" value="XC269-ND"/>
-<part name="SUPPLY4" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="GND" device=""/>
+<part name="SUPPLY4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="SUPPLY10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 <part name="FRAME7" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
 </parts>
@@ -18377,7 +18342,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 </plain>
 <instances>
 <instance part="CLK" gate="G$1" x="22.86" y="162.56" rot="R90"/>
-<instance part="SUPPLY4" gate="GND" x="27.94" y="134.62"/>
+<instance part="SUPPLY4" gate="1" x="27.94" y="134.62"/>
 <instance part="SUPPLY10" gate="VCC" x="10.16" y="157.48"/>
 <instance part="FRAME7" gate="G$1" x="0" y="0"/>
 <instance part="FRAME7" gate="G$2" x="147.32" y="0"/>
@@ -18396,12 +18361,12 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 </net>
 <net name="GND" class="0">
 <segment>
-<pinref part="SUPPLY4" gate="GND" pin="GND"/>
+<pinref part="SUPPLY4" gate="1" pin="GND"/>
 <pinref part="CLK" gate="G$1" pin="GND"/>
 <wire x1="27.94" y1="137.16" x2="27.94" y2="149.86" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="XTAL1" class="0">
+<net name="CLKOUT" class="0">
 <segment>
 <pinref part="CLK" gate="G$1" pin="OUT"/>
 <wire x1="22.86" y1="175.26" x2="22.86" y2="180.34" width="0.1524" layer="91"/>
@@ -21276,13 +21241,6 @@ OVERALL SCHEMATIC</text>
 <wire x1="119.38" y1="101.6" x2="116.84" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$5" class="0">
-<segment>
-<portref moduleinst="MC" port="XTAL1"/>
-<portref moduleinst="CLK" port="XTAL1"/>
-<wire x1="60.96" y1="127" x2="55.88" y2="127" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="ALE" class="0">
 <segment>
 <portref moduleinst="RTC" port="ALE"/>
@@ -21509,6 +21467,13 @@ OVERALL SCHEMATIC</text>
 <wire x1="182.88" y1="144.78" x2="182.88" y2="101.6" width="0.1524" layer="91"/>
 <portref moduleinst="CS" port="COLORCS"/>
 <wire x1="182.88" y1="101.6" x2="162.56" y2="101.6" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="CLKSIG" class="0">
+<segment>
+<portref moduleinst="CLK" port="CLKOUT"/>
+<portref moduleinst="MC" port="XTAL1"/>
+<wire x1="55.88" y1="127" x2="60.96" y2="127" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
