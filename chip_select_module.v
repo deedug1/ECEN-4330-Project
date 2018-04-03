@@ -22,10 +22,10 @@ module chip_select(PSEN, WR, RD, A15, A14, A13, P3_5,
 	output RTCCS;		/*synthesis loc="P18"*/
 	
 	// Memory Pin assignments
-	output ROM1CS;	/*synthesis loc="P18"*/
-	output ROM2CS;	/*synthesis loc="P17"*/
-	output RAM1CS;	/*synthesis loc="P16"*/
-	output RAM2CS;	/*synthesis loc="P15"*/
+	output ROM1CS;	/*synthesis loc="P17"*/
+	output ROM2CS;	/*synthesis loc="P16"*/
+	output RAM1CS;	/*synthesis loc="P15"*/
+	output RAM2CS;	/*synthesis loc="P14"*/
 	
 	
 	// I/O Logic
@@ -33,7 +33,7 @@ module chip_select(PSEN, WR, RD, A15, A14, A13, P3_5,
 	assign RTCCS = ~P3_5 | ~PSEN | ~A15 | A14 | A13;
 	assign LCDCS = P3_5 & PSEN & ~A15 & ~A14 & A13 & (~RD | ~WR); 
 	assign ADCCS = ~P3_5 | ~PSEN | A15 | ~A14 | ~A13;
-	assign COLOR_CS =  ~ WR & P3_5 & PSEN & ~A15 & A14 & ~A13 
+	assign COLOR_CS =  ~ WR & P3_5 & PSEN & ~A15 & A14 & ~A13; 
 	
 	// Memory logic
 	assign ROM1CS = PSEN | A15;
