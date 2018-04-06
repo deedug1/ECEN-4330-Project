@@ -56,14 +56,8 @@ INIT:
 	ACALL SET_LCD_LINE
 	MOV DPTR, #SPLASH2
 	ACALL WRITE_STRCNST_TO_LCD
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
+	MOV R1, #10
+	ACALL DELAY_XMS
 	ACALL CLEAR_LCD
 
 	;Init end
@@ -114,13 +108,8 @@ MAIN:
 	;ACALL WRITE_TO_LCD_DATA_WAIT
 	MOV DPTR, #TEMP_SUF
 	ACALL WRITE_STRCNST_TO_LCD
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
+\	MOV R1, #10
+	ACALL DELAY_XMS
 	JMP MAIN
 ;*********
 ;* Loading state
@@ -128,6 +117,7 @@ MAIN:
 ;********
 UPDATE_LC:
 	PUSH 0F0H
+	PUSH 0E0H
 	PUSH DPH
 	PUSH DPL
 	INC LC
@@ -139,6 +129,7 @@ UPDATE_LC:
 	MOVC A, @A+DPTR
 	POP DPL
 	POP DPH
+	POP 0E0H
 	POP 0F0H
 	RET
 	
@@ -150,7 +141,7 @@ UPDATE_LC:
 DELAY_1MS:
 	PUSH  3	
 	PUSH  4
-	MOV   R3, #50		;original 50
+	MOV   R3, #50			;original 50
 HERE2: 
 	MOV   R4, #255		;original 255
 HERE1: 
@@ -158,7 +149,14 @@ HERE1:
 	DJNZ  R3, HERE2		;If R3 != 0 Jump to HERE2
 	POP   4
 	POP   3
-	RET	
+	RET
+DELAY_XMS:
+	PUSH 1
+	HERE3:
+	ACALL DELAY_1MS 	; Calls Delay 1ms R1 times
+	DJNZ R1
+	POP 1
+	RET
 ;*********
 ;* Keypad scan function
 ;* Scans keypad and stores results in ram addresses 0x08, 0x09
@@ -732,12 +730,12 @@ RAM_TEST_ERROR:
 ;*********
 ;*********
 ;* Byte to string
-;* Converts a byte to a decimal coded string
+;* Converts a byte to a decimal coded string placed @DPTR
 ;********
 BYTE_TO_STRING:
 	PUSH 0E0H	
 	PUSH 0F0H	
-	PUSH 1; Work regs
+	PUSH 1		; Work regs
 	; Calculate String length
 	CLR P3.5	; Set to EX-RAM
 	MOV A, R0
@@ -747,7 +745,7 @@ STRING_LENGTH_LOOP:
 	DIV AB
 	INC R1
 	JNZ STRING_LENGTH_LOOP
-	MOV A, R1	; Place terminator
+	MOV A, R1		; Place terminator
 	ADD A, DPL
 	MOV DPL, A
 	MOV A, #00H
@@ -758,7 +756,7 @@ STRING_LENGTH_LOOP:
 	MOV A, R0
 CONVERT_LOOP:
 	MOV B, #10
-	DIV AB			; Divide by 10
+	DIV AB				; Divide by 10
 	XCH A, B
 	ORL A, #30H		; Store  remainder value in DPTR - 1
 	PUSH 0E0H
@@ -782,11 +780,8 @@ COLOR_SWATCH:
 COLOR_LOOP:
 	MOV A, R7
 	ACALL WRITE_TO_LCDCLR
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
+	MOV R1, #10
+	ACALL DELAY_XMS
 	DJNZ R7, COLOR_LOOP
 	RET
 LCDLINETABLE: DB 00H, 40H, 14H, 54H ;line_1, line_2, line_3, line_4 
