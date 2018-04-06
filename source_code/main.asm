@@ -28,93 +28,107 @@ W EQU 2CH
 CD EQU 2DH
 CE EQU 2EH
 CF EQU 2FH
+LC EQU 30H			;Loading character
+LCDL1 EQU 0FF00H
+LCDL2 EQU 0FF14H
+LCDL3 EQU 0FF28H
+LCDL4 EQU 0FF3CH
 
 ORG 0
+	LJMP INIT				;Jump over vector table
+	;Vector Table
 	
-	;Init
+ORG 30H
+INIT:
 	MOV SP, #50H			;Mov SP out of BANK
 	MOV PROG_STATE, #00H	;Set first state
-	ACALL INIT_PROC
 	ACALL INIT_LCD			; Init LCD
 	ACALL INIT_RTC			; Init RTC
-	ACALL COLOR_SWATCH		; Test color
-	ACALL RAM_TEST
+	ACALL COLOR_SWATCH		; Test colors
+	MOV A, #05H				; Set to green
+	ACALL WRITE_TO_LCDCLR	
+	ACALL RAM_TEST			; Test Ram
+	ACALL CLEAR_LCD
+	MOV A, #00H				; Display name/class
+	ACALL SET_LCD_LINE
+	MOV DPTR, #SPLASH1
+	ACALL WRITE_STR_TO_LCD
+	MOV A, #01H
+	ACALL SET_LCD_LINE
+	MOV DPTR, #SPLASH2
+	ACALL WRITE_STR_TO_LCD
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL CLEAR_LCD
+	
 	;Init end
 ;Program start
 ;****
 ;* Note: register 1 holds state
 ;****
 MAIN:
-	
-	ACALL KEYPAD_SCAN	;Allow for bouncing
-	ACALL KEYPAD_SCAN
-	ACALL KEYPAD_SCAN
-	ACALL IS_RTC_BUSY
-	MOV R0, #S1
-	ACALL READ_FROM_RTC
-	ACALL IS_RTC_BUSY
-	MOV R0, #S10
-	ACALL READ_FROM_RTC
-	ACALL SET_STATE
-	ACALL DO_CONVERSION
-	MOV A, PROG_STATE		;Check state
-	JNZ TASK2
-	ACALL L3TO8
-	ACALL WRITE_TO_7SEG
-	JMP MAIN
-	TASK2:
-	ACALL L0THR7
-	ACALL WRITE_TO_7SEG
+	ACALL READ_HMS_FROM_RTC				; Update h, m, s
+	ACALL READ_CONVERSION				; Update temp
+	; Write time
+	MOV A, #0CH
+	ACALL SET_LCD_DDRAM_ADDR
+	MOV A, H10
+	ORL A, #30H
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	MOV A, H1
+	ORL A, #30H
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	MOV A, #':'
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	MOV A, MI10
+	ORL A, #30H
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	MOV A, MI1
+	ORL A, #30H
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	MOV A, #':'
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	MOV A, S10
+	ORL A, #30H
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	MOV A, S1
+	ORL A, #30H
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
+	ACALL DELAY_1MS
 	JMP MAIN
 ;*********
-;* Init function
-;* Small dance function for the 7seg
-;* think gameboy color opening
+;* Loading state
+;* Retrieves character and updates loading character
 ;********
-INIT_PROC:
-	MOV A, #00H
-	ACALL WRITE_TO_7SEG
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	MOV A, #0FFH
-	ACALL WRITE_TO_7SEG
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	MOV A, #00H
-	ACALL WRITE_TO_7SEG
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	MOV A, #0FFH
-	ACALL WRITE_TO_7SEG
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	MOV A, #00H
-	ACALL WRITE_TO_7SEG
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	MOV A, #0FFH
-	ACALL WRITE_TO_7SEG
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
-	ACALL DELAY_1MS
+UPDATE_LC:
+	PUSH 0F0H
+	PUSH DPH
+	PUSH DPL
+	INC LC
+	MOV B, #04H
+	MOV A, LC
+	DIV AB
+	MOV A, B		;B has remainder
+	MOV DPTR, #LOADINGTABLE
+	MOVC A, @A+DPTR
+	POP DPL
+	POP DPH
+	POP 0F0H
 	RET
+	
+
 ;*********
 ;* Delay
 ;* Delays for 255 * 50 clks
@@ -212,11 +226,15 @@ END_GET_KEYPRESS:
 ;* Writes Accumulator to 7 segment display
 ;********
 WRITE_TO_7SEG:
+	PUSH DPH
+	PUSH DPL
 	SETB P3.5
 	MOV DPH, #SEGADDR
 	MOV DPL, #33H	;doesnt matter
 	MOVX @DPTR, A
 	CLR P3.5
+	POP DPL
+	POP DPH
 	RET
 ;******
 ;* RTC Interface
@@ -234,7 +252,7 @@ INIT_RTC:
 	MOV R0, #CD
 	MOV A, #04H
 	ACALL WRITE_TO_RTC		; Set CD Register
-	ACALL IS_RTC_BUSY
+	ACALL WHILE_RTC_BUSY
 	MOV R0, #CF
 	MOV A, #07H				; Stop counter and reset counter set to 24hr mode
 	ACALL WRITE_TO_RTC	
@@ -275,7 +293,10 @@ INIT_RTC:
 ;* stalls cpu untill the RTC is usable 
 ;* Note: R0 is changed
 ;******
-IS_RTC_BUSY:
+WHILE_RTC_BUSY:
+	PUSH 0E0H
+	PUSH 0
+WHILE_RTC_BUSY_LOOP:
 	MOV R0, #CD
 	MOV A, #00H
 	ACALL WRITE_TO_RTC
@@ -283,20 +304,26 @@ IS_RTC_BUSY:
 	ACALL WRITE_TO_RTC
 	ACALL READ_FROM_RTC
 	ANL A, #02H
-	JNZ IS_RTC_BUSY
+	JNZ WHILE_RTC_BUSY_LOOP
 	MOV A, #00H
 	ACALL WRITE_TO_RTC
+	POP 0
+	POP 0E0H
 	RET
 ;**********
 ;* Write to RTC function
 ;* Writes to the RTC I/O Port with R0 as the address and A as the data
 ;**********
 WRITE_TO_RTC:
+	PUSH DPH
+	PUSH DPL
 	SETB P3.5			; Set to I/O map
 	MOV DPH, #RTCADDRH
 	MOV DPL, R0			; Set lower address
-	MOVX @DPTR, A			; Do write
+	MOVX @DPTR, A		; Do write
 	CLR P3.5
+	POP DPL
+	POP DPH
 	RET
 ;**********
 ;* Read from RTC function
@@ -304,14 +331,35 @@ WRITE_TO_RTC:
 ;* Note: Stores value at address in R0 
 ;**********
 READ_FROM_RTC:
+	PUSH DPH
+	PUSH DPL
 	SETB P3.5			; Set to I/O map
 	MOV DPH, #RTCADDRH
 	MOV DPL, R0			; Set lower address
-	MOVX A, @DPTR			; Do read
+	MOVX A, @DPTR		; Do read
 	ANL A, #0FH			; Remove garbage in high nibble
 	MOV @R0, A			; Store read
 	CLR P3.5
+	POP DPH
+	POP DPL
 	RET
+;********
+;* Read Hours Minutes and Seconds function
+;* Function that reads the hours and minutes and seconds registers of the RTC.
+READ_HMS_FROM_RTC:
+	PUSH 0
+	PUSH 0E0H
+	MOV R0, #H10
+READ_HMS_LOOP:
+	ACALL WHILE_RTC_BUSY		; Make sure RTC is not busy
+	ACALL READ_FROM_RTC			; Read current register and store in ram
+	DEC R0
+	MOV A, R0
+	CJNE A, #19H, READ_HMS_LOOP ; Repeat until finished
+	POP 0E0H
+	POP 0
+	RET
+	
 ;******
 ;* ADC Interface
 ;* Procedures that deal with interfacing with the ADC
@@ -356,10 +404,14 @@ WRITE_TO_LCD_CMD_WAIT:
 ;******
 WRITE_TO_LCD_CMD:
 	SETB P3.5
+	PUSH DPH
+	PUSH DPL
 	MOV DPH, #LCDADDRH
 	MOV DPL, #00H		;Instruction address WRITE
 	MOVX @DPTR, A		;Write what is stored in A
 	CLR P3.5
+	POP DPL
+	POP DPH
 	RET
 ;******
 ;* LCD data write function
@@ -367,10 +419,14 @@ WRITE_TO_LCD_CMD:
 ;******
 WRITE_TO_LCD_DATA:
 	SETB P3.5
+	PUSH DPH
+	PUSH DPL
 	MOV DPH, #LCDADDRH
 	MOV DPL, #01H		;DATA address WRITE
 	MOVX @DPTR, A		;Write what is stored in A
 	CLR P3.5
+	POP DPL
+	POP DPH
 	RET
 ;******
 ;* LCD control read function
@@ -378,16 +434,32 @@ WRITE_TO_LCD_DATA:
 ;******
 READ_FROM_LCD_CMD:
 	SETB P3.5
+	PUSH DPH
+	PUSH DPL
 	MOV DPH, #LCDADDRH
 	MOV DPL, #02H		;Instruction address READ
 	MOVX A, @DPTR
 	CLR P3.5
+	POP DPL
+	POP DPH
 	RET
+;*******
+;* While LCD Busy function
+;* Loops while the LCD is BUSY
+;*******	
+WHILE_LCD_BUSY:
+	PUSH 0E0H
+WHILE_LCD_BUSY_LOOP:
+ 	ACALL READ_FROM_LCD_CMD		;Read LCD controller
+ 	ANL A, #80H					;Mask Busy Flag
+ 	JNZ WHILE_LCD_BUSY_LOOP
+	POP 0E0H
+ 	RET
 ;*******
 ;* Write to LCD COLOR PORT fuction
 ;* Writes a value in A to the LCD Color port
 ;*******
-WRITE_TO_LCD_CLR:
+WRITE_TO_LCDCLR:
 	SETB P3.5
 	MOV DPH, #LCDCLRADDRH
 	MOV DPL, #00H		;Doesn't matter
@@ -395,30 +467,81 @@ WRITE_TO_LCD_CLR:
 	CLR P3.5
 	RET
 ;*******
+;* Write to LCD String function
+;* Write 0 Terminated string CONSTANT to LCD 
+;* DPTR is assumed to be set to location of String
+;*******
+WRITE_STR_TO_LCD:
+	PUSH 7					; Push R7 for work
+	MOV R7, #00H			; Load offset
+STR_WRITE_LOOP:
+	MOV A, R7				; Current offset
+	MOVC A, @A+DPTR			
+	JZ END_WRITE_STR_TO_LCD	; Found 0 end loop
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	INC R7					; INC OFFSET
+	SJMP STR_WRITE_LOOP
+END_WRITE_STR_TO_LCD:
+	POP 7					; Pop R7
+	RET
+
+;*******
 ;* Clear LCD function
 ;* Clears LCD screen
 ;*******	
 CLEAR_LCD:
+	PUSH 0E0H
 	MOV A, #00000001B	;Clear display
 	ACALL WRITE_TO_LCD_CMD	
+	POP 0E0H
 	RET
 ;*******
 ;* Return home LCD function
 ;* Returns the LCD cursor to the home posistion (wherever that is)
 ;*******
 CURSOR_HOME:
+	PUSH 0E0H
 	MOV A, #00000010B
 	ACALL WRITE_TO_LCD_CMD
+	POP 0E0H
+	RET
+
+;*******
+;* Set line funciton
+;* Sets the cursor to the start of the line stored in A (0-3)
+;*******
+SET_LCD_LINE:
+	PUSH 0E0H
+	PUSH DPH
+	PUSH DPL
+	MOV DPTR, #LCDLINETABLE	;Set dptr to address of linetable
+	MOVC A, @A+DPTR			;Load value from table
+	ACALL SET_LCD_DDRAM_ADDR
+	POP DPL
+	POP DPH
+	POP 0E0H
+	RET
+
+;*******
+;* Write to LCD DDRAM Address
+;* Changes pointer to LCD DDRAM and sets up the LCD_WRITE_DATA to write to DDRAM
+;*******
+SET_LCD_DDRAM_ADDR:
+	PUSH 0E0H
+	ORL A, #80H
+	ACALL WRITE_TO_LCD_CMD_WAIT
+	POP 0E0H
 	RET
 ;*******
-;* While LCD Busy function
-;* Loops while the LCD is BUSY
-;*******	
-WHILE_LCD_BUSY:
- 	ACALL READ_FROM_LCD_CMD		;Read LCD controller
- 	ANL A, #80H					;Mask Busy Flag
- 	JNZ WHILE_LCD_BUSY
- 	RET
+;* Write to LCD CGRAM Address
+;* Changes pointer to LCD CGRAM and sets up the LCD_WRITE_DATA to write to CGRAM
+;*******
+SET_LCD_CGRAM_ADDR:
+	PUSH 0E0H
+	ORL A, #40H
+	ACALL WRITE_TO_LCD_CMD_WAIT
+	POP 0E0H
+	RET	
 ;*******
 ;* LCD Init
 ;* Initializes the LCD with the follwing specs (TBD)
@@ -480,17 +603,17 @@ BINARY_TO_BCD:
 	PUSH 0E0H		;Push registers for work
 	PUSH 0F0H
 	MOV B, #100
-	DIV AB			;Divide A contains remainder
+	DIV AB				;Divide A contains quotient
 	MOV HUNDREDS, A		;Store quotient
 	MOV A, B
 	MOV B, #10
-	DIV AB			;Divide A contains remainder
-	MOV TENS, A		;Store quotient
+	DIV AB				;Divide A contains quotient
+	MOV TENS, A			;Store quotient
 	MOV A, B
 	MOV B, #1		
-	DIV AB			;Divide A contains remainder
-	MOV ONES, A		;Store quotient
-	POP 0F0H		;Pop registers
+	DIV AB				;Divide A contains quotient
+	MOV ONES, A			;Store quotient
+	POP 0F0H			;Pop registers
 	POP 0E0H
 	RET
 ;********
@@ -506,144 +629,50 @@ IS_LESS_OR_EQUAL:
 	CPL F0	
 	POP 0E0H
 	RET
-;********
-;* 3 to 8 logic
-;* dumb function that mimic three to 8 logic
-;********
-L3TO8:
-	MOV A, KPR3R4		; Load R3, R4 data
-	CPL A
-	ANL A, #07H			; Wipe all but last three keys  (C, B, A)
-	MOV DPTR, #SEGTABLE	; Mov dptr to segment table
-	MOVC A, @A+DPTR		; Load
-	RET
+
 ;*********
 ;* EX RAM test
 ;* Function for testing the External ram of the system
 ;********
 RAM_TEST:
-	CLR P3.5			; Move to memory map
-	MOV DPTR, #0F0FFH
-	MOV A, #'!'
-	MOVX @DPTR, A
-	MOV DPTR, #0FFFFH
-	MOV A, #'"'
-	MOVX @DPTR, A
-	MOV DPTR, #0FF00H
-	MOV A, #'#'
-	MOVX @DPTR, A
-	MOV DPTR, #0F0FFH
+	MOV DPTR, #RAMTEST_M
+	ACALL WRITE_STR_TO_LCD		; Write first string
+	; Begin test
+	CLR P3.5					;Set to Memory Map
+	MOV DPTR, #0000H			;Start at the beginning
+	RAM_TEST_WRITE_LOOP:
+	MOV A, #55H					;Test val
+	MOVX @DPTR, A				;Write
+	INC DPTR					;next address
+	MOV A, DPH	
+	MOV B, DPL
+	ADD A, B
+	JNZ RAM_TEST_WRITE_LOOP
+	MOV DPTR, #0000H			;Verify from beginning
+	RAM_TEST_READ_LOOP:
+	MOV A, #55H
 	MOVX A, @DPTR
-	ACALL WRITE_TO_LCD_DATA
-	ACALL WHILE_LCD_BUSY
-	MOV DPTR, #0FFFFH
-	MOVX A, @DPTR
-	ACALL WRITE_TO_LCD_DATA
-	ACALL WHILE_LCD_BUSY
-	MOV DPTR, #0FF00H
-	MOVX A, @DPTR
-	ACALL WRITE_TO_LCD_DATA
-	ACALL WHILE_LCD_BUSY
+	CJNE A, #55H, RAM_TEST_ERROR
+	INC DPTR
+	MOV A, DPH
+	MOV B, DPL
+	ADD A, B
+	JNZ RAM_TEST_READ_LOOP
 	RET
-;*****
-;* do a conversion
-;* Dumb function that does a conversion and displays the value scanned if * key was pressed
-;******
-DO_CONVERSION:
-	MOV A, KPR1R2			; Check to see if star was pressed
-	CPL A
-	ANL A, #80H
-	JZ  END_DO_CONVERSION	; * was not pressed
-CONVERSION_LOOP:
-	ACALL KEYPAD_SCAN		; * Is pressed loop untill it is not pressed
-	ACALL KEYPAD_SCAN		; Allow for bouncing
-	ACALL KEYPAD_SCAN	
-	MOV A, KPR1R2
-	CPL A
-	ANL A, #80H
-	JNZ CONVERSION_LOOP		; # still pressed
-	ACALL READ_CONVERSION	; Start conversion and display
-	MOV A, LAST_CONV		; Load last conversion value
-	MOV B, #TEMPR_CONST
-	MUL AB				; LSB store in ACC
-	MOV B, #10		
-	DIV AB				; Divide by 10 to convert from volts to Celsius 
-	ACALL BINARY_TO_BCD		; Convert to BCD to print
-	ACALL CLEAR_LCD			; Reset LCD
-	ACALL WHILE_LCD_BUSY
-	ACALL CURSOR_HOME
-	ACALL WHILE_LCD_BUSY
-	MOV A, HUNDREDS			; Write 100s
-	ORL A, #30H
-	ACALL WRITE_TO_LCD_DATA
-	ACALL WHILE_LCD_BUSY
-	MOV A, TENS				; Write 10s
-	ORL A, #30H
-	ACALL WRITE_TO_LCD_DATA
-	ACALL WHILE_LCD_BUSY
-	MOV A, ONES				; Write 1s
-	ORL A, #30H
-	ACALL WRITE_TO_LCD_DATA
-	ACALL WHILE_LCD_BUSY
-	MOV A, S10
-	ORL A, #30H
-	ACALL WRITE_TO_LCD_DATA
-	ACALL WHILE_LCD_BUSY
-	MOV A, S1
-	ORL A, #30H
-	ACALL WRITE_TO_LCD_DATA
-	ACALL WHILE_LCD_BUSY
-	;End do conversion and display
-END_DO_CONVERSION:
-	RET	
-;********
-;* 0 through 7 logic
-;* dumb function that mimics 0 through 7 logic
-;********
-L0THR7:
-	ACALL GET_KEYPRESS_HEX
-	MOV B, A
-	MOV A, #07H
-	ACALL IS_LESS_OR_EQUAL
-	JNB F0, NOT_7
-	MOV A, B
-	MOV DPTR, #SEGTABLE	; Mov dptr to segment table
-	MOVC A, @A+DPTR		; Load
-	MOV LAST_WRITE, A		; Store last displayed value
+RAM_TEST_ERROR:
+	MOV A, #00H
+	ACALL SET_LCD_LINE
+	MOV DPTR, #RAMTESTE_M
+	ACALL WRITE_STR_TO_LCD
 	RET
-NOT_7:  
-	MOV A, LAST_WRITE		;Load last displayed value
-	RET
-	
-;**********
-;* Set state logic
-;* dumb function that mimic state machine
-;*********
-SET_STATE:
-	MOV A, KPR3R4
-	CPL A
-	ANL A, #80H		;Check #
-	JZ EXIT_SET_STATE	;# Not pressed
-STATE_LOOP:
-	ACALL KEYPAD_SCAN	;# Is pressed loop untill it is not pressed
-	ACALL KEYPAD_SCAN	;Allow for bouncing
-	ACALL KEYPAD_SCAN	
-	MOV A, KPR3R4
-	CPL A
-	ANL A, #80H
-	JNZ STATE_LOOP		;# still pressed
-	MOV A, PROG_STATE		;INV STATE
-	CPL A
-	MOV PROG_STATE, A
-	ACALL INIT_PROC
-EXIT_SET_STATE:
-   	RET
+
+
    	
 COLOR_SWATCH:
 	MOV R7, #07H
 COLOR_LOOP:
 	MOV A, R7
-	ACALL WRITE_TO_LCD_CLR
+	ACALL WRITE_TO_LCDCLR
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
@@ -651,5 +680,11 @@ COLOR_LOOP:
 	ACALL DELAY_1MS
 	DJNZ R7, COLOR_LOOP
 	RET
+LCDLINETABLE: DB 00H, 40H, 14H, 54H ;line_1, line_2, line_3, line_4 
 SEGTABLE: DB 0FEH,0FDH,0FBH,0F7H,0EFH,0DFH,0BFH,7FH;a, b, c, d, e, f, g, df 
+LOADINGTABLE: DB "-\|/"
+RAMTEST_M: DB  "   TESTING EXRAM    ",0
+RAMTESTE_M: DB "    EXRAM ERROR     ",0
+SPLASH1: DB "Justin Pachl", 0
+SPLASH2: DB "ECEN-4330 2018", 0
 END
