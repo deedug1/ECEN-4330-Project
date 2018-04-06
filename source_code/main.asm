@@ -1,7 +1,7 @@
-PROG_STATE EQU 11H
 KPR1R2 EQU 08H
 KPR3R4 EQU 09H
-LAST_CONV EQU 0BH
+CONV EQU 000BH
+TEMP EQU 000CH
 HUNDREDS EQU 0CH
 TENS EQU 0DH
 ONES EQU 0EH
@@ -41,7 +41,6 @@ ORG 0
 ORG 30H
 INIT:
 	MOV SP, #50H			;Mov SP out of BANK
-	MOV PROG_STATE, #00H	;Set first state
 	ACALL INIT_LCD			; Init LCD
 	ACALL INIT_RTC			; Init RTC
 	ACALL COLOR_SWATCH		; Test colors
@@ -52,11 +51,11 @@ INIT:
 	MOV A, #00H				; Display name/class
 	ACALL SET_LCD_LINE
 	MOV DPTR, #SPLASH1
-	ACALL WRITE_STR_TO_LCD
+	ACALL WRITE_STRCNST_TO_LCD
 	MOV A, #01H
 	ACALL SET_LCD_LINE
 	MOV DPTR, #SPLASH2
-	ACALL WRITE_STR_TO_LCD
+	ACALL WRITE_STRCNST_TO_LCD
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
@@ -66,7 +65,7 @@ INIT:
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
 	ACALL CLEAR_LCD
-	
+
 	;Init end
 ;Program start
 ;****
@@ -100,6 +99,21 @@ MAIN:
 	MOV A, S1
 	ORL A, #30H
 	ACALL WRITE_TO_LCD_DATA_WAIT
+	ACALL CONVERT_TEMP
+	MOV DPTR, #0000H
+	MOV R0, A
+	ACALL BYTE_TO_STRING
+	MOV A, #00H
+	ACALL SET_LCD_DDRAM_ADDR
+	MOV DPTR, #TEMP_PRE
+	ACALL WRITE_STRCNST_TO_LCD
+	MOV DPTR, #0000H
+	ACALL WRITE_STR_TO_LCD
+	;MOV DPTR, #CONV
+	;MOVX A, @DPTR
+	;ACALL WRITE_TO_LCD_DATA_WAIT
+	MOV DPTR, #TEMP_SUF
+	ACALL WRITE_STRCNST_TO_LCD
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
@@ -346,6 +360,7 @@ READ_FROM_RTC:
 ;********
 ;* Read Hours Minutes and Seconds function
 ;* Function that reads the hours and minutes and seconds registers of the RTC.
+;*******
 READ_HMS_FROM_RTC:
 	PUSH 0
 	PUSH 0E0H
@@ -369,15 +384,39 @@ READ_HMS_LOOP:
 ;* tells the ADC to perform a conversion waits 1ms and reads the conversion
 ;******
 READ_CONVERSION:
+	PUSH DPH
+	PUSH DPL
 	SETB P3.5
 	MOV DPH, #ADCADDRH
 	MOV DPL, #00H
 	MOVX @DPTR, A
 	ACALL DELAY_1MS
 	MOVX A, @DPTR
-	MOV LAST_CONV, A
 	CLR P3.5
+	MOV DPTR, #CONV
+	MOVX @DPTR, A
+	POP DPL
+	POP DPH
 	RET
+;******
+;*	Convert Temperature funciton
+;*  Converts the CONVerstion to temperature and stores the result in TEMP
+;****** 
+CONVERT_TEMP:
+	PUSH DPH
+	PUSH DPL					; Push A, DPTR for work
+	CLR P3.5
+	MOV DPTR, #CONV				; Load last conversion
+	MOVX A, @DPTR
+	CLR C
+	RLC A
+	MOV DPTR, #TEMP
+	MOVX @DPTR, A				; store calculated temp
+	POP DPL
+	POP DPH
+	RET
+
+	
 ;******
 ;* LCD Interface
 ;* Procedures that deal with interfacing with the LCD
@@ -471,20 +510,43 @@ WRITE_TO_LCDCLR:
 ;* Write 0 Terminated string CONSTANT to LCD 
 ;* DPTR is assumed to be set to location of String
 ;*******
-WRITE_STR_TO_LCD:
-	PUSH 7					; Push R7 for work
-	MOV R7, #00H			; Load offset
-STR_WRITE_LOOP:
-	MOV A, R7				; Current offset
+WRITE_STRCNST_TO_LCD:
+	PUSH DPH
+	PUSH DPL
+	PUSH 0E0H
+STRCNST_WRITE_LOOP:
+	MOV A, #00H
 	MOVC A, @A+DPTR			
+	JZ END_WRITE_STRCNST_TO_LCD	; Found 0 end loop
+	ACALL WRITE_TO_LCD_DATA_WAIT
+	INC DPTR					; INC OFFSET
+	SJMP STRCNST_WRITE_LOOP
+END_WRITE_STRCNST_TO_LCD:
+	POP 0E0H
+	POP DPL				
+	POP DPH
+	RET
+;*******
+;* Write to LCD String function
+;* Write 0 Terminated string to LCD 
+;* DPTR is assumed to be set to location of String
+;*******
+WRITE_STR_TO_LCD:
+	PUSH DPH
+	PUSH DPL
+	PUSH 0E0H
+STR_WRITE_LOOP:
+	MOV A, #00H
+	MOVX A, @DPTR			
 	JZ END_WRITE_STR_TO_LCD	; Found 0 end loop
 	ACALL WRITE_TO_LCD_DATA_WAIT
-	INC R7					; INC OFFSET
+	INC DPTR					; INC OFFSET
 	SJMP STR_WRITE_LOOP
 END_WRITE_STR_TO_LCD:
-	POP 7					; Pop R7
+	POP 0E0H
+	POP DPL				
+	POP DPH
 	RET
-
 ;*******
 ;* Clear LCD function
 ;* Clears LCD screen
@@ -559,7 +621,7 @@ INIT_LCD:
 	ACALL WRITE_TO_7SEG
 	ACALL DELAY_1MS
 	ACALL DELAY_1MS
-	MOV A, #00001111B		;Display ON
+	MOV A, #00001100B		;Display ON
 	ACALL WRITE_TO_LCD_CMD		
 	MOV A, #0FBH			;Status Marker
 	ACALL WRITE_TO_7SEG
@@ -636,7 +698,7 @@ IS_LESS_OR_EQUAL:
 ;********
 RAM_TEST:
 	MOV DPTR, #RAMTEST_M
-	ACALL WRITE_STR_TO_LCD		; Write first string
+	ACALL WRITE_STRCNST_TO_LCD		; Write first string
 	; Begin test
 	CLR P3.5					;Set to Memory Map
 	MOV DPTR, #0000H			;Start at the beginning
@@ -663,11 +725,58 @@ RAM_TEST_ERROR:
 	MOV A, #00H
 	ACALL SET_LCD_LINE
 	MOV DPTR, #RAMTESTE_M
-	ACALL WRITE_STR_TO_LCD
+	ACALL WRITE_STRCNST_TO_LCD
+	RET
+;*********
+;* General functions
+;*********
+;*********
+;* Byte to string
+;* Converts a byte to a decimal coded string
+;********
+BYTE_TO_STRING:
+	PUSH 0E0H	
+	PUSH 0F0H	
+	PUSH 1; Work regs
+	; Calculate String length
+	CLR P3.5	; Set to EX-RAM
+	MOV A, R0
+	MOV R1, #00H
+STRING_LENGTH_LOOP:
+	MOV B, #10
+	DIV AB
+	INC R1
+	JNZ STRING_LENGTH_LOOP
+	MOV A, R1	; Place terminator
+	ADD A, DPL
+	MOV DPL, A
+	MOV A, #00H
+	ADDC A, DPH
+	MOV DPH, A
+	MOV A, #00H
+	MOVX @DPTR, A
+	MOV A, R0
+CONVERT_LOOP:
+	MOV B, #10
+	DIV AB			; Divide by 10
+	XCH A, B
+	ORL A, #30H		; Store  remainder value in DPTR - 1
+	PUSH 0E0H
+	MOV A, DPL
+	SUBB A, #01H
+	MOV DPL, A
+	MOV A, DPH
+	SUBB A, #00H
+	MOV DPH, A
+	POP 0E0H
+	MOVX @DPTR, A
+	XCH A, B
+	JNZ CONVERT_LOOP
+	POP 1
+	POP 0F0H
+	POP 0E0H
 	RET
 
-
-   	
 COLOR_SWATCH:
 	MOV R7, #07H
 COLOR_LOOP:
@@ -686,5 +795,7 @@ LOADINGTABLE: DB "-\|/"
 RAMTEST_M: DB  "   TESTING EXRAM    ",0
 RAMTESTE_M: DB "    EXRAM ERROR     ",0
 SPLASH1: DB "Justin Pachl", 0
-SPLASH2: DB "ECEN-4330 2018", 0
+SPLASH2: DB "ECEN-4330 2018",0
+TEMP_PRE: DB "TEMP: ",0
+TEMP_SUF: DB 0DFH, 43H, 00H
 END
