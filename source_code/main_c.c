@@ -56,9 +56,9 @@ __code unsigned char KEYPAD_HEX[] = {   0x01, 0x04, 0x07, 0x0F,
                                         0x02, 0x05, 0x08, 0x00,
                                         0x03, 0x06, 0x09, 0x0E,
                                         0x0A, 0x0B, 0x0C, 0x0D, 0xFF}; // 0xFF should not be accessable
-__code unsigned char HOME[] =   {0x00, 0x04, 0x0A, 0x11, 0x0E, 0x0E, 0x0E, 0x00}; // Home Icon
+__code unsigned char HOME[] =   {0x00, 0x04, 0x0A, 0x11, 0x0E, 0x0E, 0x00, 0x00}; // Home Icon
 __code unsigned char SMILE[] =  {0x00, 0x00, 0x0A, 0x0A, 0x11, 0x0E, 0x00, 0x00}; // Smile Icon
-__code unsigned char WORK[] =   {0x1F, 0x11, 0x15, 0x15, 0x11, 0x15, 0x11, 0x1F}; // Work Icond
+__code unsigned char WORK[] =   {0x1F, 0x11, 0x15, 0x15, 0x11, 0x15, 0x11, 0x1F}; // Work Icon
 // Special function register locations
 __sbit __at (0xB5) IO_M;
 __sbit __at (0xD5) F0; // Personal flag
@@ -83,6 +83,7 @@ void delay(int x);
 // LCD interfacing functions
 void init_LCD();
 void clear_LCD();
+void clear_line(char line);
 void set_LCD_line(char line);
 void set_LCD_cursor(char loc);
 void putchar(char c);
@@ -91,7 +92,10 @@ void set_CG_char(char c, __code char * map);
 char set_keypad_state_nb();
 char set_keypad_state_b();
 char is_pressed(int key);
+void get_address(char * msg, __xdata char ** put, char line);
+void get_byte(char * msg, char * put, char line);
 void scan_keypad();
+
 // RTC interfacing functions
 void init_RTC();
 void while_rtc_busy();
@@ -171,6 +175,29 @@ void main_menu(void) {
     state.next = programs[index];
     return;
 }
+void get_address(char * msg, __xdata char ** put, char line) {
+    char index = 0;
+    *(put) = 0; // Clear the address BOIIIII
+    clear_line(line);
+    printf_tiny("%s", msg);
+    for(index = 3; index >= 0; index--) {
+        set_keypad_state_b();
+        *(put) += (*(last_key + KEYPAD_HEX) << (index * 4));
+        putchar(*(last_key + KEYPAD_CHARS));
+    }
+    return;
+}
+void get_byte(char * msg, char * put, char line) {
+    char index = 0;
+    *(put) = 0; // Clear the byte BOOIIIIII
+    clear_line(line);
+    printf_tiny("%s", msg);
+    for(index = 1; index >= 0; index--) {
+        set_keypad_state_b();
+        *(put) +=(*(last_key + KEYPAD_HEX) << (index * 4));
+        putchar(*(last_key+KEYPAD_CHARS));
+    }
+}
 void debug(void) {
     __xdata char * dump_index = 0;
     char index = 0;
@@ -194,19 +221,14 @@ void debug(void) {
     state.next = main_menu;
     return;   
 }
+
 void dump_program(void) {
     // local vars
     __xdata char * start = 0;
     __idata index = 0;
     clear_LCD();
-    set_LCD_line(0);
-    printf_tiny("Enter Address: ");
-    for(index = 3; index >= 0; index--) {
-        set_keypad_state_b();
-        start += (*(last_key + KEYPAD_HEX) << index * 4 );
-        putchar(*(last_key + KEYPAD_CHARS));
-    }
-    set_LCD_line(0);
+    get_address("Enter Address ", &start, 0);
+    clear_line(0);
     printf_tiny("Prev(0) Next(1) %c(2)", 0x00);
     do {
         memory_dump_line(start, 4, 1);
@@ -234,6 +256,116 @@ void dump_program(void) {
     return;
 }
 void search_program(void) {
+    __xdata unsigned char * start = 0;
+    unsigned char search = 0;
+    unsigned int count = 0;
+    char found = 0;
+    clear_LCD();
+    get_address("Enter Address: ", &start, 0);
+    get_byte("Enter Search Val: ", &search, 0);
+    do {
+        found = (*(start) == search);
+        count++;
+        start++;
+    } while( found == 0 && count > 0x0000);
+    clear_line(0);
+    if(found) {
+        printf_tiny("%x Found @ ", search & 0xFF);
+        printf_tiny("%x", ((unsigned int)start >> 12) & 0x000F ); // print address
+        printf_tiny("%x", ((unsigned int)start >> 8) & 0x000F ); // print address
+        printf_tiny("%x", ((unsigned int)start >> 4) & 0x000F ); // print address
+        printf_tiny("%x", ((unsigned int)start) & 0x000F ); // print address
+    } else {
+        printf_tiny("%x Not Found", search & 0xFF);
+    }
+    clear_line(1);
+    printf_tiny("(0)Again? %c(1)", 0x00);
+    found = 0;
+    do {
+        set_keypad_state_b();
+        if(is_pressed(KEY_0)) {
+            state.next = search_program;
+            found = 1;
+        } else if(is_pressed(KEY_1)) {
+            state.next = main_menu;
+            found = 1;
+        }
+    } while(found == 0);
+    return;
+}
+void move_program(void) {
+    __xdata char * start = 0;
+    __xdata char * dest = 0;
+    char index = 0;
+    unsigned char block_size = 0;
+    clear_LCD();
+    get_address("Enter Src: ", &start, 0);
+    get_address("Enter Dest: ", &dest, 0);
+    get_byte("Block Size", &block_size, 0);
+    do {
+        *(dest + block_size) = *(start + block_size);
+    } while( block_size -- > 0);
+    clear_LCD();
+    set_LCD_line(0);
+    printf_tiny("Move Complete %c", 0x01);
+    set_LCD_line(1);
+    printf_tiny("Again(0) %c(1)", 0x00);
+    do {
+      set_keypad_state_b();
+      if(is_pressed(KEY_0)) {
+          state.next = move_program;
+          index = 1;
+      } else if(is_pressed(KEY_1)){
+          state.next = main_menu;
+          index = 1;
+      }
+    } while(index == 0);
+    return;
+}
+void edit_program(void) {
+    __xdata char * start = 0;
+    char index = 0;
+    char newVal = 0;
+    clear_LCD();    
+    get_address("Enter Address: ", &start, 0);
+    do {
+        index = 0;
+        clear_line(0);
+        printf_tiny("Current Address:");
+        printf_tiny("%x", ((unsigned int)start >> 12) & 0x000F ); // print address
+        printf_tiny("%x", ((unsigned int)start >> 8) & 0x000F ); // print address
+        printf_tiny("%x", ((unsigned int)start >> 4) & 0x000F ); // print address
+        printf_tiny("%x", ((unsigned int)start) & 0x000F ); // print address
+        clear_line(1);
+        printf_tiny("Current Val: %x", *(start) & 0xFF);
+        get_byte("New val: ", &newVal, 2);
+        *start = newVal;
+        clear_line(3);
+        printf_tiny("Edit Next? Y(0) N(1)");
+        do {
+            set_keypad_state_b();
+            if(is_pressed(KEY_0)) {
+                start++;
+                index = 1;
+            } else if(is_pressed(KEY_1)) {
+                state.next = main_menu;
+                index = -1;
+            }
+        } while(index == 0);
+        clear_line(3);        
+    } while(index != -1);
+    return;
+}
+void set_RTC_program(void) {
+    oregon_program();
+    return;
+}
+void time_temp_program(void) {
+    oregon_program();
+    state.next = main_menu;
+    return;
+}
+void oregon_program(void) {
     char i = 0;
     clear_LCD();
     set_LCD_line(0);
@@ -249,31 +381,6 @@ void search_program(void) {
         putchar(0x02);
     }
     set_keypad_state_b();
-    state.next = main_menu;
-    return;
-}
-void move_program(void) {
-    search_program();
-    state.next = main_menu;
-    return;
-}
-void edit_program(void) {
-    search_program();
-    state.next = main_menu;
-    return;
-}
-void set_RTC_program(void) {
-    search_program();
-    state.next = main_menu;
-    return;
-}
-void time_temp_program(void) {
-    search_program();
-    state.next = main_menu;
-    return;
-}
-void oregon_program(void) {
-    search_program();
     state.next = main_menu;
     return;
 }
@@ -378,6 +485,12 @@ void set_LCD_line(char line) {
     while(*LCD_BUSY & 0x80);
     *LCD_CMD = 0x80 | (*(LCD_LINES + line));
     IO_M = 0;
+    return;
+}
+void clear_line(char line) {
+    set_LCD_line(line);
+    printf_tiny("                    ");
+    set_LCD_line(line);
     return;
 }
 void set_LCD_cursor(char loc) {
@@ -539,32 +652,4 @@ void memory_dump_line(__xdata char * start, unsigned char num_bytes, char line) 
         
     }
     return;
-}
-void move_memory(__xdata char * src, __xdata char * dest, unsigned char num_bytes) {
-    unsigned char i = 0;
-    char temp = 0;
-    IO_M = 0;
-    for(i = 0; i < num_bytes; i++) {
-        temp = *(src + i);
-        *(dest + i) = temp;
-    }
-    return;
-}
-void edit_memory(__xdata char * dest, char val) {
-    IO_M = 0;
-    *dest = val;
-    return;
-}
-int search_memory(__xdata char * start, char val, unsigned char num_bytes) {
-    unsigned char i = 0;
-    IO_M = 0;    
-    F0 = 0;
-    for(i = 0; i < num_bytes; i++) {
-        if(*(start + i) == val) {
-            return (int)(start + i);
-        }
-    }
-    F0 = 1;
-    return 0xFFFF;
-    
 }
