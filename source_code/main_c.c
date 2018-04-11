@@ -16,6 +16,28 @@
 #define CD 0x0D
 #define CE 0x0E
 #define CF 0x0F
+#define KEY_1 (1 << 0)
+#define KEY_4 (1 << 1)
+#define KEY_7 (1 << 2)
+#define KEY_F (1 << 3)
+#define KEY_2 (1 << 4)
+#define KEY_5 (1 << 5)
+#define KEY_8 (1 << 6)
+#define KEY_0 (1 << 7)
+#define KEY_3 (1 << 8)
+#define KEY_6 (1 << 9)
+#define KEY_9 (1 << 10)
+#define KEY_E (1 << 11)
+#define KEY_A (1 << 12)
+#define KEY_B (1 << 13)
+#define KEY_C (1 << 14)
+#define KEY_D (1 << 15)
+struct state;
+typedef void state_fn(void);
+struct state {
+    state_fn * next;
+    int i;
+};
 // External Hardware addresses
 __xdata unsigned char * __code LCD_BUSY = 0x2002;
 __xdata unsigned char * __code LCD_CMD = 0X2000;
@@ -34,7 +56,9 @@ __code unsigned char KEYPAD_HEX[] = {   0x01, 0x04, 0x07, 0x0F,
                                         0x02, 0x05, 0x08, 0x00,
                                         0x03, 0x06, 0x09, 0x0E,
                                         0x0A, 0x0B, 0x0C, 0x0D, 0xFF}; // 0xFF should not be accessable
-__code unsigned char HOME[] = {0x00, 0x04, 0x0A, 0x11, 0x0E, 0x0E, 0x00}; // Home Icon
+__code unsigned char HOME[] =   {0x00, 0x04, 0x0A, 0x11, 0x0E, 0x0E, 0x0E, 0x00}; // Home Icon
+__code unsigned char SMILE[] =  {0x00, 0x00, 0x0A, 0x0A, 0x11, 0x0E, 0x00, 0x00}; // Smile Icon
+__code unsigned char WORK[] =   {0x1F, 0x11, 0x15, 0x15, 0x11, 0x15, 0x11, 0x1F}; // Work Icond
 // Special function register locations
 __sbit __at (0xB5) IO_M;
 __sbit __at (0xD5) F0; // Personal flag
@@ -44,13 +68,12 @@ unsigned int __xdata KEYPAD_STATE; // State of keypad since last scan
 int __xdata whole_temp; // whole part of temperature
 int __xdata frac_temp; // Fraction part of temperature
 char __xdata last_key; // Last Keypad index since last scan
-int  (* __data  state)(void);
+
 /* current state of program
  * 0x00 = Main menu, 0x01 = Dump program, 0x02 = Move program 
  * 0x03 = Edit program, 0x04 = Search program, 0x05 = Debug mode,
  * 0x06 = Oregon Trail*? 
  */
-__xdata char * __idata dump_index;
 __sfr __at (0xE0) ACC; 
 __sfr __at (0xF0) BREG;
 // Prototypes
@@ -65,8 +88,9 @@ void set_LCD_cursor(char loc);
 void putchar(char c);
 void set_CG_char(char c, __code char * map);
 // Keypad interfacing functions
-char getchar_nb();
-char getchar_b();
+char set_keypad_state_nb();
+char set_keypad_state_b();
+char is_pressed(int key);
 void scan_keypad();
 // RTC interfacing functions
 void init_RTC();
@@ -83,14 +107,26 @@ void move_memory(__xdata char * src, __xdata char * dest, unsigned char num_byte
 void edit_memory(__xdata char * dest, char val);
 int search_memory(__xdata char * start, char val, unsigned char num_bytes);
 // Programs
-int dump_program();
-
-
+void main_menu(void);
+void debug( void);
+void dump_program(void);
+void search_program(void);
+void edit_program(void);
+void move_program(void);
+void set_RTC_program(void);
+void time_temp_program(void);
+void oregon_program(void);
+__code state_fn * programs[] = {dump_program, search_program, edit_program, move_program, set_RTC_program,
+                                time_temp_program, oregon_program, debug}; // TODO make struct for pointer and string
+__code char * program_strings[] = { "(%d)Dump","(%d)Search", "(%d)Edit", "(%d)Move",
+                                    "(%d)Set clock","(%d)Time & Temp", "(%d)Oregon Trail","(%d)Debug"};
+__code unsigned char num_programs = 8;
+struct state __xdata state;
 int main(void) {
     char temp = 0x00;
     init_LCD(); // Init hardware
     init_RTC();
-    *LCD_COLOR = 0x05; // Set green screen
+    *LCD_COLOR = 0x03; // Set blue screen
     // Test Ram
     BREG = ram_test(); 
     clear_LCD();
@@ -99,49 +135,79 @@ int main(void) {
         printf_tiny("  RAM TEST FAILED  ");
         while(1);
     }
+    state.next = main_menu;
+    state.i = 0;
     set_CG_char(0, HOME);
-    dump_index = 0;
-    state = dump_program;
+    set_CG_char(1, SMILE);
+    set_CG_char(2, WORK);
     while(1) {
-        // do_conversion(&whole_temp, &frac_temp);
-        // set_LCD_line(0);
-        // printf_tiny("%d%d", read_rtc(H10), read_rtc(H1));
-        // printf_tiny(":%d%d:", read_rtc(MI10), read_rtc(MI1));
-        // printf_tiny("%d%d", read_rtc(S10), read_rtc(S1));
-        // set_LCD_line(1);
-        // printf_tiny("%d.%d", whole_temp, frac_temp);
-        // set_LCD_line(2);
-        // temp = getchar_nb();
-        // putchar(*(temp + KEYPAD_CHARS));
-        // memory_dump_line(dump_index, 4, 3);
-        // dump_index = dump_index + 4;
-        // delay(100);
-        state = state();
+        KEYPAD_STATE = 0xFFFF;
+        state.next();
     }
 }
-int dump_program() {
+void main_menu(void) {
+    unsigned char index = 0;
+    clear_LCD();
+    set_LCD_line(0);
+    printf_tiny("Welcome%c!", 0x01);
+    set_LCD_line(1);
+    printf_tiny("Pick(F) a program%c!", 0x01);
+    set_LCD_line(2);
+    printf_tiny("Prev(0) Next(E)");
+    while(!is_pressed(KEY_F)) {
+        set_LCD_line(3);
+        printf_tiny("                    ");
+        set_LCD_line(3);
+        printf_tiny(*(program_strings + index), index);
+        set_keypad_state_b();
+        if(is_pressed(KEY_0)) {
+            index--;
+        } else if(is_pressed(KEY_E)) {
+            index++;   
+        }
+        index = index % num_programs;
+    }
+    IO_M = 0;
+    state.next = programs[index];
+    return;
+}
+void debug(void) {
+    __xdata char * dump_index = 0;
+    char index = 0;
+    clear_LCD();
+    KEYPAD_STATE = 0xFFFF;
+    while(!is_pressed(KEY_1)){
+        do_conversion(&whole_temp, &frac_temp);
+        set_LCD_line(0);
+        printf_tiny("%d%d", read_rtc(H10), read_rtc(H1));
+        printf_tiny(":%d%d:", read_rtc(MI10), read_rtc(MI1));
+        printf_tiny("%d%d", read_rtc(S10), read_rtc(S1));
+        set_LCD_line(1);
+        printf_tiny("%d.%d", whole_temp, frac_temp);
+        set_LCD_line(2);
+        set_keypad_state_nb();
+        putchar(*(last_key + KEYPAD_CHARS));
+        memory_dump_line(dump_index, 4, 3);
+        dump_index = dump_index + 4;
+        delay(100);
+    }
+    state.next = main_menu;
+    return;   
+}
+void dump_program(void) {
     // local vars
     __xdata char * start = 0;
     __idata index = 0;
     clear_LCD();
     set_LCD_line(0);
     printf_tiny("Enter Address: ");
-    getchar_b();
-    start = (__xdata char *)(*(last_key + KEYPAD_HEX) << 12);
-    putchar(*(last_key + KEYPAD_CHARS));
-    getchar_b();
-    start += (*(last_key + KEYPAD_HEX) << 8);
-    putchar(*(last_key + KEYPAD_CHARS));
-    getchar_b();
-    start += (*(last_key + KEYPAD_HEX) << 4);
-    putchar(*(last_key + KEYPAD_CHARS));
-    getchar_b();
-    start += *(last_key + KEYPAD_HEX);
-    putchar(*(last_key + KEYPAD_CHARS));
+    for(index = 3; index >= 0; index--) {
+        set_keypad_state_b();
+        start += (*(last_key + KEYPAD_HEX) << index * 4 );
+        putchar(*(last_key + KEYPAD_CHARS));
+    }
     set_LCD_line(0);
-    printf_tiny("Prev(0) Next(1) ");
-    putchar(0x00);
-    printf_tiny("(2)"); 
+    printf_tiny("Prev(0) Next(1) %c(2)", 0x00);
     do {
         memory_dump_line(start, 4, 1);
         start += 4;
@@ -150,16 +216,66 @@ int dump_program() {
         memory_dump_line(start, 4, 3);
         start += 4;
         do {
-            getchar_b();
-        } while(last_key > 2);
-        if(*(last_key + KEYPAD_HEX) == 0x00) {
-            start -= 24; // 2 * 3 * 4 = 24 
-        } else if(*(last_key + KEYPAD_HEX) == 0x01) {
-            // do nothing
-        } else if(*(last_key + KEYPAD_HEX) == 0x02) {
-            return dump_program;
-        }
-    } while(1);
+            set_keypad_state_b();
+            if(is_pressed(KEY_0)) {
+                start = start <= 24 ? 0 : start - 24; // 2 * 3 * 4 = 24 
+                index = 1;
+            } else if(is_pressed(KEY_2)) {
+                index = 0xFF;
+                state.next = main_menu;
+            } else if(is_pressed(KEY_1)) {
+                index = 1;
+            } else if(is_pressed(KEY_D)) {
+                index = 0xFF;
+                state.next = debug;
+            }
+        }while(index == 0); // Make sure 0-2 are clicked
+    } while(index != 0xFF);
+    return;
+}
+void search_program(void) {
+    char i = 0;
+    clear_LCD();
+    set_LCD_line(0);
+    for(i = 0; i < 20; i++) {
+        putchar(0x02);
+    }
+    set_LCD_line(1);
+    printf_tiny(" Under construction ");
+    set_LCD_line(2);
+    printf_tiny("   comeback later   ");
+    set_LCD_line(3);
+    for(i = 0; i < 20; i++) {
+        putchar(0x02);
+    }
+    set_keypad_state_b();
+    state.next = main_menu;
+    return;
+}
+void move_program(void) {
+    search_program();
+    state.next = main_menu;
+    return;
+}
+void edit_program(void) {
+    search_program();
+    state.next = main_menu;
+    return;
+}
+void set_RTC_program(void) {
+    search_program();
+    state.next = main_menu;
+    return;
+}
+void time_temp_program(void) {
+    search_program();
+    state.next = main_menu;
+    return;
+}
+void oregon_program(void) {
+    search_program();
+    state.next = main_menu;
+    return;
 }
 void delay1ms() {
     unsigned char x = 10;
@@ -190,7 +306,11 @@ void putchar(char c) {
     IO_M = 0;
     return;
 }
-char getchar_b() {
+char is_pressed(int key) {
+    return (KEYPAD_STATE & key) == 0;
+} 
+char set_keypad_state_b() {
+    unsigned char index = 0;
     KEYPAD_STATE = 0x0000;
     while(KEYPAD_STATE != 0xFFFF) { // Wait for blank state
         scan_keypad();
@@ -203,28 +323,26 @@ char getchar_b() {
         scan_keypad();
         scan_keypad(); // Allow for bouncing
     }
-    BREG = 0;
+    index = 0;
     while(1) {
-        if((KEYPAD_STATE & 0x0001) == 0) {
-            last_key = BREG;
+        if((KEYPAD_STATE & (0x0001 << index)) == 0) {
+            last_key = index;
             return last_key;
         }
-        KEYPAD_STATE = KEYPAD_STATE >> 1; // Shift and scan next key; 
-        BREG++;
+        index++;
     }
 }
-char getchar_nb() {
+char set_keypad_state_nb() {
+    unsigned char index = 0;
     scan_keypad();
     scan_keypad();
     scan_keypad(); // Allow for bouncing
-    BREG = 0;    
     while(1) {
-        if((KEYPAD_STATE & 0x0001) == 0) {
-            last_key = BREG;
+        if((KEYPAD_STATE & (0x0001 << index)) == 0) {
+            last_key = index;
             return last_key;
         }
-        KEYPAD_STATE = KEYPAD_STATE >> 1;
-        BREG++;
+        index++;
     }
 }
 void clear_LCD() {
