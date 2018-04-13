@@ -16,6 +16,7 @@
 #define CD 0x0D
 #define CE 0x0E
 #define CF 0x0F
+// Keys for KEYPADSTATE
 #define KEY_1 (1 << 0)
 #define KEY_4 (1 << 1)
 #define KEY_7 (1 << 2)
@@ -47,7 +48,7 @@ __xdata unsigned char * __code SEG_DISPLAY = 0x0000;
 __xdata unsigned char * __code ADC = 0x6000;
 __xdata unsigned char * __code RTC = 0x8000;
 // Constant stuff
-__code unsigned char LCD_LINES[] = {0x00, 0x40, 0x14, 0x54};
+__code unsigned char LCD_LINES[] = {0x00, 0x40, 0x14, 0x54}; // Starting point for each line on the LCD
 __code unsigned char KEYPAD_CHARS[] = { '1', '4', '7', 'F',
                                         '2', '5', '8', '0',
                                         '3', '6', '9', 'E',
@@ -61,7 +62,6 @@ __code unsigned char SMILE[] =  {0x00, 0x00, 0x0A, 0x0A, 0x11, 0x0E, 0x00, 0x00}
 __code unsigned char WORK[] =   {0x1F, 0x11, 0x15, 0x15, 0x11, 0x15, 0x11, 0x1F}; // Work Icon
 // Special function register locations
 __sbit __at (0xB5) IO_M;
-__sbit __at (0xD5) F0; // Personal flag
 __sfr __at (0x90) P1;
 // Global variables
 unsigned int __xdata KEYPAD_STATE; // State of keypad since last scan
@@ -69,11 +69,6 @@ int __xdata whole_temp; // whole part of temperature
 int __xdata frac_temp; // Fraction part of temperature
 char __xdata last_key; // Last Keypad index since last scan
 
-/* current state of program
- * 0x00 = Main menu, 0x01 = Dump program, 0x02 = Move program 
- * 0x03 = Edit program, 0x04 = Search program, 0x05 = Debug mode,
- * 0x06 = Oregon Trail*? 
- */
 __sfr __at (0xE0) ACC; 
 __sfr __at (0xF0) BREG;
 // Prototypes
@@ -107,9 +102,6 @@ void do_conversion(int * whole, int * frac);
 // Memory Functions
 char ram_test();
 void memory_dump_line( __xdata char * start, unsigned char num_bytes, char line);
-void move_memory(__xdata char * src, __xdata char * dest, unsigned char num_bytes);
-void edit_memory(__xdata char * dest, char val);
-int search_memory(__xdata char * start, char val, unsigned char num_bytes);
 // Programs
 void main_menu(void);
 void debug( void);
@@ -120,32 +112,36 @@ void move_program(void);
 void set_RTC_program(void);
 void time_temp_program(void);
 void oregon_program(void);
-__code state_fn * programs[] = {dump_program, search_program, edit_program, move_program, set_RTC_program,
-                                time_temp_program, oregon_program, debug}; // TODO make struct for pointer and string
-__code char * program_strings[] = { "(%d)Dump","(%d)Search", "(%d)Edit", "(%d)Move",
+// Program menu
+__code state_fn * programs[] = {dump_program, search_program, edit_program, move_program, fill_program, 
+                                set_RTC_program, time_temp_program, oregon_program, debug}; // TODO make struct for pointer and string
+__code char * program_strings[] = { "(%d)Dump","(%d)Search", "(%d)Edit", "(%d)Move", "(%d)Fill",
                                     "(%d)Set clock","(%d)Time & Temp", "(%d)Oregon Trail","(%d)Debug"};
 __code unsigned char num_programs = 8;
+// Current Program state
 struct state __xdata state;
 int main(void) {
-    char temp = 0x00;
     init_LCD(); // Init hardware
     init_RTC();
-    *LCD_COLOR = 0x03; // Set blue screen
+    *LCD_COLOR = 0x01; // Set teal screen
     // Test Ram
     BREG = ram_test(); 
     clear_LCD();
     if(BREG != 0) {
-        set_LCD_line(1);
+        set_LCD_line(0);
         printf_tiny("  RAM TEST FAILED  ");
-        while(1);
+        set_LCD_line(1);
+        printf_tiny("    GET NEW RAM    ");
+        while(1); // Loop for enternity you failure
     }
-    state.next = main_menu;
-    state.i = 0;
+    state.next = main_menu; // Set first state
+    state.i = 0; // Ummm
+    // Load custom characters
     set_CG_char(0, HOME);
     set_CG_char(1, SMILE);
     set_CG_char(2, WORK);
     while(1) {
-        KEYPAD_STATE = 0xFFFF;
+        KEYPAD_STATE = 0xFFFF; // Reset keypad state incase the next program immediatly looks for input
         state.next();
     }
 }
@@ -153,20 +149,18 @@ void main_menu(void) {
     unsigned char index = 0;
     clear_LCD();
     set_LCD_line(0);
-    printf_tiny("Welcome%c!", 0x01);
+    printf_tiny("Welcome %c!", 0x01);
     set_LCD_line(1);
-    printf_tiny("Pick(F) a program%c!", 0x01);
+    printf_tiny("Pick(F) a program %c!", 0x01);
     set_LCD_line(2);
-    printf_tiny("Prev(0) Next(E)");
+    printf_tiny("Prev(0) Next(1)");
     while(!is_pressed(KEY_F)) {
-        set_LCD_line(3);
-        printf_tiny("                    ");
-        set_LCD_line(3);
+        clear_line(3);
         printf_tiny(*(program_strings + index), index);
         set_keypad_state_b();
         if(is_pressed(KEY_0)) {
             index--;
-        } else if(is_pressed(KEY_E)) {
+        } else if(is_pressed(KEY_2)) {
             index++;   
         }
         index = index % num_programs;
@@ -204,17 +198,17 @@ void debug(void) {
     clear_LCD();
     KEYPAD_STATE = 0xFFFF;
     while(!is_pressed(KEY_1)){
-        do_conversion(&whole_temp, &frac_temp);
+        do_conversion(&whole_temp, &frac_temp); // Update temperature
         set_LCD_line(0);
         printf_tiny("%d%d", read_rtc(H10), read_rtc(H1));
         printf_tiny(":%d%d:", read_rtc(MI10), read_rtc(MI1));
-        printf_tiny("%d%d", read_rtc(S10), read_rtc(S1));
+        printf_tiny("%d%d", read_rtc(S10), read_rtc(S1)); // Print HH:Mi:SS
         set_LCD_line(1);
-        printf_tiny("%d.%d", whole_temp, frac_temp);
+        printf_tiny("%d.%d", whole_temp, frac_temp); // Print Temperature
         set_LCD_line(2);
-        set_keypad_state_nb();
-        putchar(*(last_key + KEYPAD_CHARS));
-        memory_dump_line(dump_index, 4, 3);
+        set_keypad_state_nb(); // Update keypad state
+        putchar(*(last_key + KEYPAD_CHARS)); // Print Keypad state
+        memory_dump_line(dump_index, 4, 3); // Dump a Line of memory
         dump_index = dump_index + 4;
         delay(100);
     }
@@ -225,9 +219,9 @@ void debug(void) {
 void dump_program(void) {
     // local vars
     __xdata char * start = 0;
-    __idata index = 0;
+    __idata input = 0;
     clear_LCD();
-    get_address("Enter Address ", &start, 0);
+    get_address("Enter Address: ", &start, 0);
     clear_line(0);
     printf_tiny("Prev(0) Next(1) %c(2)", 0x00);
     do {
@@ -240,19 +234,19 @@ void dump_program(void) {
         do {
             set_keypad_state_b();
             if(is_pressed(KEY_0)) {
-                start = start <= 24 ? 0 : start - 24; // 2 * 3 * 4 = 24 
-                index = 1;
+                start -= 24; // Will loop
+                input = 1;
             } else if(is_pressed(KEY_2)) {
-                index = 0xFF;
+                input = 0xFF;
                 state.next = main_menu;
             } else if(is_pressed(KEY_1)) {
-                index = 1;
+                input = 1; // Will loop
             } else if(is_pressed(KEY_D)) {
-                index = 0xFF;
+                input = 0xFF;
                 state.next = debug;
             }
-        }while(index == 0); // Make sure 0-2 are clicked
-    } while(index != 0xFF);
+        }while(input == 0); // Make sure 0-2 are clicked
+    } while(input != 0xFF);
     return;
 }
 void search_program(void) {
@@ -267,7 +261,7 @@ void search_program(void) {
         found = (*(start) == search);
         count++;
         start++;
-    } while( found == 0 && count > 0x0000);
+    } while( found == 0 && count > 0x0000); // Search whole memory
     clear_line(0);
     if(found) {
         printf_tiny("%x Found @ ", search & 0xFF);
@@ -279,7 +273,7 @@ void search_program(void) {
         printf_tiny("%x Not Found", search & 0xFF);
     }
     clear_line(1);
-    printf_tiny("(0)Again? %c(1)", 0x00);
+    printf_tiny("(0)Again? %c(2)", 0x00);
     found = 0;
     do {
         set_keypad_state_b();
@@ -301,7 +295,7 @@ void move_program(void) {
     clear_LCD();
     get_address("Enter Src: ", &start, 0);
     get_address("Enter Dest: ", &dest, 0);
-    get_byte("Block Size", &block_size, 0);
+    get_byte("Block Size: ", &block_size, 0);
     do {
         *(dest + block_size) = *(start + block_size);
     } while( block_size -- > 0);
@@ -309,7 +303,7 @@ void move_program(void) {
     set_LCD_line(0);
     printf_tiny("Move Complete %c", 0x01);
     set_LCD_line(1);
-    printf_tiny("Again(0) %c(1)", 0x00);
+    printf_tiny("Again?(0) %c(2)", 0x00);
     do {
       set_keypad_state_b();
       if(is_pressed(KEY_0)) {
@@ -341,7 +335,7 @@ void edit_program(void) {
         get_byte("New val: ", &newVal, 2);
         *start = newVal;
         clear_line(3);
-        printf_tiny("Edit Next? Y(0) N(1)");
+        printf_tiny("Edit Next? Y(0) %c(2)", 0x00);
         do {
             set_keypad_state_b();
             if(is_pressed(KEY_0)) {
@@ -355,6 +349,36 @@ void edit_program(void) {
         clear_line(3);        
     } while(index != -1);
     return;
+}
+void fill_program(void) {
+    __xdata char * start;
+    char val;
+    char block_size;
+    char index = 0;
+    clear_LCD();
+    get_address("Enter Address: ", &start, 0);
+    get_byte("Block Size: ", &block_size, 0);
+    get_byte("Enter Val: ", &val, 0);
+    do {
+        *(start) = val;
+    } while( block_size --> 0);
+    clear_LCD();
+    set_LCD_line(0);
+    printf_tiny("Fill Complete %c", 0x01);
+    set_LCD_line(1);
+    printf_tiny("Again?(0) %c(2)", 0x00);
+    do {
+      set_keypad_state_b();
+      if(is_pressed(KEY_0)) {
+          state.next = fill_program;
+          index = 1;
+      } else if(is_pressed(KEY_1)){
+          state.next = main_menu;
+          index = 1;
+      }
+    } while(index == 0);
+    return;
+    
 }
 void set_RTC_program(void) {
     oregon_program();
