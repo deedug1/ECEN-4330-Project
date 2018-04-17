@@ -82,6 +82,8 @@ void clear_line(char line);
 void set_LCD_line(char line);
 void set_LCD_cursor(char loc);
 void putchar(char c);
+void print_byte(unsigned char byte);
+void print_word(unsigned int word);
 void set_CG_char(char c, __code char * map);
 // Keypad interfacing functions
 char set_keypad_state_nb();
@@ -153,12 +155,12 @@ void main_menu(void) {
     set_LCD_line(1);
     printf_tiny("Pick(F) a program %c!", 0x01);
     set_LCD_line(2);
-    printf_tiny("Prev(0) Next(1)");
+    printf_tiny("Prev(1) Next(2)");
     while(!is_pressed(KEY_F)) {
         clear_line(3);
         printf_tiny(*(program_strings + index), index);
         set_keypad_state_b();
-        if(is_pressed(KEY_0)) {
+        if(is_pressed(KEY_1)) {
             index--;
         } else if(is_pressed(KEY_2)) {
             index++;   
@@ -251,39 +253,50 @@ void dump_program(void) {
 }
 void search_program(void) {
     __xdata unsigned char * start = 0;
-    unsigned char search = 0;
     unsigned int count = 0;
+    unsigned char search = 0;
     char found = 0;
+    char input = 0;
     clear_LCD();
-    get_address("Enter Address: ", &start, 0);
     get_byte("Enter Search Val: ", &search, 0);
     do {
-        found = (*(start) == search);
-        count++;
-        start++;
-    } while( found == 0 && count > 0x0000); // Search whole memory
-    clear_line(0);
-    if(found) {
-        printf_tiny("%x Found @ ", search & 0xFF);
-        printf_tiny("%x", ((unsigned int)start >> 12) & 0x000F ); // print address
-        printf_tiny("%x", ((unsigned int)start >> 8) & 0x000F ); // print address
-        printf_tiny("%x", ((unsigned int)start >> 4) & 0x000F ); // print address
-        printf_tiny("%x", ((unsigned int)start) & 0x000F ); // print address
-    } else {
-        printf_tiny("%x Not Found", search & 0xFF);
-    }
-    clear_line(1);
-    printf_tiny("(0)Again? %c(2)", 0x00);
-    found = 0;
-    do {
-        set_keypad_state_b();
-        if(is_pressed(KEY_0)) {
-            state.next = search_program;
-            found = 1;
-        } else if(is_pressed(KEY_1)) {
-            state.next = main_menu;
-            found = 1;
+        count = 0;
+        clear_line(1);
+        printf_tiny("Searching...");
+        do {
+            found = (*(start) == search);
+            start++;
+            count--; // fixes not found bug when using continue feature
+        } while( found == 0 && count > 0x0000); // Search whole memory
+        clear_line(0);
+        print_byte(search);
+        if(found) {
+            start--; // Move back to where it was last found
+            printf_tiny(" Found @ ");
+            print_word((unsigned int)start);
+            start++; // So that we can search again
+        } else {
+            printf_tiny(" Not Found", search & 0xFF);
         }
+        clear_line(1);
+        printf_tiny("Next location(0)");
+        clear_line(2);
+        printf_tiny("New Search(1) %c(2)", 0x00);
+        do {
+            found = 2;
+            set_keypad_state_b();
+            // Using found as state value
+            if(is_pressed(KEY_1)) {
+                state.next = search_program;
+                found = 1;
+            } else if(is_pressed(KEY_0)) {
+                state.next = search_program;
+                found = 0;
+            } else if (is_pressed(KEY_2)) {
+                state.next = main_menu;
+                found = 1;
+            }
+        }while(found == 2);
     } while(found == 0);
     return;
 }
@@ -295,7 +308,9 @@ void move_program(void) {
     clear_LCD();
     get_address("Enter Src: ", &start, 0);
     get_address("Enter Dest: ", &dest, 0);
-    get_byte("Block Size: ", &block_size, 0);
+    do {
+        get_byte("Block Size: ", &block_size, 0);
+    } while(block_size == 0);
     do {
         *(dest + block_size) = *(start + block_size);
     } while( block_size -- > 0);
@@ -309,7 +324,7 @@ void move_program(void) {
       if(is_pressed(KEY_0)) {
           state.next = move_program;
           index = 1;
-      } else if(is_pressed(KEY_1)){
+      } else if(is_pressed(KEY_2)){
           state.next = main_menu;
           index = 1;
       }
@@ -341,7 +356,7 @@ void edit_program(void) {
             if(is_pressed(KEY_0)) {
                 start++;
                 index = 1;
-            } else if(is_pressed(KEY_1)) {
+            } else if(is_pressed(KEY_2)) {
                 state.next = main_menu;
                 index = -1;
             }
@@ -356,11 +371,13 @@ void fill_program(void) {
     char block_size;
     char index = 0;
     clear_LCD();
-    get_address("Enter Address: ", &start, 0);
-    get_byte("Block Size: ", &block_size, 0);
     get_byte("Enter Val: ", &val, 0);
+    get_address("Enter Address: ", &start, 0);
     do {
-        *(start) = val;
+        get_byte("Block Size: ", &block_size, 0);
+    } while(block_size == 0);
+    do {
+        *(start + block_size) = val;
     } while( block_size --> 0);
     clear_LCD();
     set_LCD_line(0);
@@ -372,7 +389,7 @@ void fill_program(void) {
       if(is_pressed(KEY_0)) {
           state.next = fill_program;
           index = 1;
-      } else if(is_pressed(KEY_1)){
+      } else if(is_pressed(KEY_2)){
           state.next = main_menu;
           index = 1;
       }
@@ -435,6 +452,17 @@ void putchar(char c) {
     while(*LCD_BUSY & 0x80); // Waits until the LCD is not busy
     *LCD_DATA = c;
     IO_M = 0;
+    return;
+}
+void print_word(unsigned int word) {
+    printf_tiny("%x", (word >> 12) & 0x000F ); // print address
+    printf_tiny("%x", (word >> 8) & 0x000F ); // print address
+    printf_tiny("%x", (word >> 4) & 0x000F ); // print address
+    printf_tiny("%x", word & 0x000F ); // print address
+}
+void print_byte(unsigned char byte) {
+    printf_tiny("%x", (byte >> 4) & 0x0F);
+    printf_tiny("%x", (byte) & 0x0F);
     return;
 }
 char is_pressed(int key) {
@@ -658,15 +686,12 @@ void memory_dump_line(__xdata char * start, unsigned char num_bytes, char line) 
     unsigned char i;
     IO_M = 0;
     line_start = *(LCD_LINES + line);
-    set_LCD_line(line);
-    printf_tiny("%x", ((unsigned int)start >> 12) & 0x000F ); // print address
-    printf_tiny("%x", ((unsigned int)start >> 8) & 0x000F ); // print address
-    printf_tiny("%x", ((unsigned int)start >> 4) & 0x000F ); // print address
-    printf_tiny("%x", ((unsigned int)start) & 0x000F ); // print address
+    clear_line(line);
+    print_word((unsigned int)start);
     for(i = 0; i < num_bytes; i++) {
         current = *(start + i);
         set_LCD_cursor(line_start + 5 + i * 3);
-        printf_tiny("%x", current & 0xff); // Print hex
+        print_byte(current);
         set_LCD_cursor(line_start + 16 + i);
         if(0x7F > current && current > 0x19) {
             printf_tiny("%c", current & 0xff);
