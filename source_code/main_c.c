@@ -171,16 +171,17 @@ void main_menu(void) {
     state.next = programs[index];
     return;
 }
-void get_address(char * msg, __xdata char ** put, char line) {
+void get_address(char * msg, __xdata char ** put) {
     char index = 0;
     *(put) = 0; // Clear the address BOIIIII
-    clear_line(line);
+    clear_line(0);
     printf_tiny("%s", msg);
     for(index = 3; index >= 0; index--) {
         set_keypad_state_b();
         *(put) += (*(last_key + KEYPAD_HEX) << (index * 4));
         putchar(*(last_key + KEYPAD_CHARS));
     }
+
     return;
 }
 void get_byte(char * msg, char * put, char line) {
@@ -276,7 +277,7 @@ void search_program(void) {
             print_word((unsigned int)start);
             start++; // So that we can search again
         } else {
-            printf_tiny(" Not Found", search & 0xFF);
+            printf_tiny(" Not Found");
         }
         clear_line(1);
         printf_tiny("Next location(0)");
