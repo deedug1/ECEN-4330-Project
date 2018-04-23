@@ -33,6 +33,7 @@
 #define KEY_B (1 << 13)
 #define KEY_C (1 << 14)
 #define KEY_D (1 << 15)
+// type state
 struct state;
 typedef void state_fn(void);
 struct state {
@@ -47,7 +48,7 @@ __xdata unsigned char * __code LCD_COLOR = 0x4000;
 __xdata unsigned char * __code SEG_DISPLAY = 0x0000;
 __xdata unsigned char * __code ADC = 0x6000;
 __xdata unsigned char * __code RTC = 0x8000;
-// Constant stuff
+// Constants and Tables
 __code unsigned char LCD_LINES[] = {0x00, 0x40, 0x14, 0x54}; // Starting point for each line on the LCD
 __code unsigned char KEYPAD_CHARS[] = { '1', '4', '7', 'F',
                                         '2', '5', '8', '0',
@@ -69,7 +70,6 @@ int __xdata whole_temp; // whole part of temperature
 int __xdata frac_temp; // Fraction part of temperature
 char __xdata last_key; // Last Keypad index since last scan
 
-__sfr __at (0xE0) ACC; 
 __sfr __at (0xF0) BREG;
 // Prototypes
 // Delays
@@ -92,7 +92,6 @@ char is_pressed(int key);
 void get_address(char * msg, __xdata char ** put, char line);
 void get_byte(char * msg, char * put, char line);
 void scan_keypad();
-
 // RTC interfacing functions
 void init_RTC();
 void while_rtc_busy();
@@ -106,7 +105,7 @@ char ram_test();
 void memory_dump_line( __xdata char * start, unsigned char num_bytes, char line);
 // Programs
 void main_menu(void);
-void debug( void);
+void debug(void);
 void dump_program(void);
 void search_program(void);
 void edit_program(void);
@@ -125,7 +124,7 @@ struct state __xdata state;
 int main(void) {
     init_LCD(); // Init hardware
     init_RTC();
-    *LCD_COLOR = 0x04; // Set teal screen
+    *LCD_COLOR = 0x04; // Set yellow screen
     // Test Ram
     BREG = ram_test(); 
     clear_LCD();
@@ -324,9 +323,9 @@ void move_program(void) {
     do {
         get_byte("Block Size: ", &block_size, 0);
     } while(block_size == 0);
-    do {
+    while(block_size --> 0) {
         *(dest + block_size) = *(start + block_size);
-    } while( block_size -- > 0);
+    }
     clear_LCD();
     set_LCD_line(0);
     printf_tiny("Move Complete %c", 0x01);
@@ -387,9 +386,9 @@ void fill_program(void) {
     do {
         get_byte("Block Size: ", &block_size, 0);
     } while(block_size == 0);
-    do {
+    while(block_size --> 0) {
         *(start + block_size) = val;
-    } while( block_size --> 0);
+    }
     clear_LCD();
     set_LCD_line(0);
     printf_tiny("Fill Complete %c", 0x01);
@@ -425,6 +424,7 @@ void time_temp_program(void) {
         printf_tiny(":%d%d:", read_rtc(MI10), read_rtc(MI1));
         printf_tiny("%d%d", read_rtc(S10), read_rtc(S1));
         set_keypad_state_nb();
+        delay(20);
     } while(!is_pressed(KEY_2));
     state.next = main_menu;
     return;
