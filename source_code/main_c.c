@@ -89,8 +89,8 @@ void set_CG_char(char c, __code char * map);
 char set_keypad_state_nb();
 char set_keypad_state_b();
 char is_pressed(int key);
-void get_address(char * msg, __xdata char ** put, char line);
-void get_byte(char * msg, char * put, char line);
+void get_address(char * msg, char * rng, __xdata char ** put, char line);
+void get_byte(char * msg, char * rng, char * put, char line);
 void scan_keypad();
 // RTC interfacing functions
 void init_RTC();
@@ -115,10 +115,10 @@ void time_temp_program(void);
 void oregon_program(void);
 // Program menu
 __code state_fn * programs[] = {dump_program, search_program, edit_program, move_program, fill_program, 
-                                set_RTC_program, time_temp_program, oregon_program, debug}; // TODO make struct for pointer and string
-__code char * program_strings[] = { "(%d)Dump","(%d)Search", "(%d)Edit", "(%d)Move", "(%d)Fill",
-                                    "(%d)Set clock","(%d)Time & Temp", "(%d)Oregon Trail","(%d)Debug"};
-__code unsigned char num_programs = 9;
+                               time_temp_program, debug}; // TODO make struct for pointer and string
+__code char * program_strings[] = { "Dump","Search", "Edit", "Move", "Fill",
+                                    "Time & Temp", "Debug"};
+__code unsigned char num_programs = 7;
 // Current Program state
 struct state __xdata state;
 int main(void) {
@@ -126,9 +126,8 @@ int main(void) {
     init_RTC();
     *LCD_COLOR = 0x04; // Set yellow screen
     // Test Ram
-    BREG = ram_test(); 
     clear_LCD();
-    if(BREG != 0) {
+    if(ram_test() != 0) {
         set_LCD_line(0);
         printf_tiny("  RAM TEST FAILED  ");
         set_LCD_line(1);
@@ -157,10 +156,10 @@ void main_menu(void) {
     printf_tiny("Prev(1) Next(2)");
     while(!is_pressed(KEY_F)) {
         clear_line(3);
-        printf_tiny(*(program_strings + index), index);
+        printf_tiny(*(program_strings + index));
         set_keypad_state_b();
         if(is_pressed(KEY_1)) {
-            index = index == 0 ? 8 : index - 1;
+            index = index == 0 ? num_programs - 1 : index - 1;
         } else if(is_pressed(KEY_2)) {
             index++;   
         }
@@ -170,11 +169,13 @@ void main_menu(void) {
     state.next = programs[index];
     return;
 }
-void get_address(char * msg, __xdata char ** put, char line) {
+void get_address(char * msg, char * rng, __xdata char ** put, char line) {
     char index = 0;
     do {
         *(put) = 0; // Clear the address BOIIIII
-        clear_line(line + 1);
+        clear_line(line + 2);
+        clear_line(line + 1); 
+        printf_tiny("%s", rng);       
         clear_line(line);
         printf_tiny("%s", msg);
         for(index = 3; index >= 0; index--) {
@@ -182,18 +183,20 @@ void get_address(char * msg, __xdata char ** put, char line) {
             *(put) += (*(last_key + KEYPAD_HEX) << (index * 4));
             putchar(*(last_key + KEYPAD_CHARS));
         }
-        clear_line(line+1);
-        printf_tiny("Confirm(any) Redo(F)");
+        clear_line(line + 2);
+        printf_tiny("Redo(F) Confirm(any)");
         set_keypad_state_b();
     } while(is_pressed(KEY_F));
 
     return;
 }
-void get_byte(char * msg, char * put, char line) {
+void get_byte(char * msg, char * rng, char * put, char line) {
     char index = 0;
     do {
         *(put) = 0; // Clear the byte BOOIIIIII
+        clear_line(line + 2);
         clear_line(line + 1);
+        printf_tiny("%s", rng);        
         clear_line(line);
         printf_tiny("%s", msg);
         for(index = 1; index >= 0; index--) {
@@ -201,17 +204,18 @@ void get_byte(char * msg, char * put, char line) {
             *(put) +=(*(last_key + KEYPAD_HEX) << (index * 4));
             putchar(*(last_key+KEYPAD_CHARS));
         }
-        clear_line(line+1);
-        printf_tiny("Confirm(any) Redo(F)");
+        clear_line(line + 2);
+        printf_tiny("Redo(F) Confirm(any)");
         set_keypad_state_b();
     } while(is_pressed(KEY_F));
 }
 void debug(void) {
     __xdata char * dump_index = 0;
     char index = 0;
+    char seg = 0x01;
     clear_LCD();
     KEYPAD_STATE = 0xFFFF;
-    while(!is_pressed(KEY_1)){
+    while(!is_pressed(KEY_A)){
         do_conversion(&whole_temp, &frac_temp); // Update temperature
         set_LCD_line(0);
         printf_tiny("%d%d", read_rtc(H10), read_rtc(H1));
@@ -224,9 +228,12 @@ void debug(void) {
         putchar(*(last_key + KEYPAD_CHARS)); // Print Keypad state
         memory_dump_line(dump_index, 4, 3); // Dump a Line of memory
         dump_index = dump_index + 4;
+        change_display(seg);
+        seg = seg == 0 ? 1 : seg << 1;
         delay(100);
     }
     state.next = main_menu;
+    change_display(0xFF);
     return;   
 }
 
@@ -235,9 +242,9 @@ void dump_program(void) {
     __xdata char * start = 0;
     __idata input = 0;
     clear_LCD();
-    get_address("Enter Address: ", &start, 0);
+    get_address("Enter Address: ","(0000-FFFF)", &start, 0);
     clear_line(0);
-    printf_tiny("Prev(0) Next(1) %c(2)", 0x00);
+    printf_tiny("Prev(1) Next(2) %c(A)", 0x00);
     do {
         memory_dump_line(start, 4, 1);
         start += 4;
@@ -247,17 +254,14 @@ void dump_program(void) {
         start += 4;
         do {
             set_keypad_state_b();
-            if(is_pressed(KEY_0)) {
+            if(is_pressed(KEY_1)) {
                 start -= 24; // Will loop
                 input = 1;
-            } else if(is_pressed(KEY_2)) {
+            } else if(is_pressed(KEY_A)) {
                 input = 0xFF;
                 state.next = main_menu;
-            } else if(is_pressed(KEY_1)) {
+            } else if(is_pressed(KEY_2)) {
                 input = 1; // Will loop
-            } else if(is_pressed(KEY_D)) {
-                input = 0xFF;
-                state.next = debug;
             }
         }while(input == 0); // Make sure 0-2 are clicked
     } while(input != 0xFF);
@@ -270,7 +274,7 @@ void search_program(void) {
     char found = 0;
     char input = 0;
     clear_LCD();
-    get_byte("Enter Search Val: ", &search, 0);
+    get_byte("Enter Search Val: ","00-FF", &search, 0);
     do {
         count = 0;
         clear_line(1);
@@ -293,7 +297,7 @@ void search_program(void) {
         clear_line(1);
         printf_tiny("Next location(0)");
         clear_line(2);
-        printf_tiny("New Search(1) %c(2)", 0x00);
+        printf_tiny("New Search(1) %c(A)", 0x00);
         do {
             found = 2;
             set_keypad_state_b();
@@ -304,7 +308,7 @@ void search_program(void) {
             } else if(is_pressed(KEY_0)) {
                 state.next = search_program;
                 found = 0;
-            } else if (is_pressed(KEY_2)) {
+            } else if (is_pressed(KEY_A)) {
                 state.next = main_menu;
                 found = 1;
             }
@@ -318,10 +322,10 @@ void move_program(void) {
     char index = 0;
     unsigned char block_size = 0;
     clear_LCD();
-    get_address("Enter Src: ", &start, 0);
-    get_address("Enter Dest: ", &dest, 0);
+    get_address("Enter Src: ","(0000-FFFF)", &start, 0);
+    get_address("Enter Dest: ","(0000-FFFF)", &dest, 0);
     do {
-        get_byte("Block Size: ", &block_size, 0);
+        get_byte("Block Size: ","(01-FF)", &block_size, 0);
     } while(block_size == 0);
     while(block_size --> 0) {
         *(dest + block_size) = *(start + block_size);
@@ -330,13 +334,13 @@ void move_program(void) {
     set_LCD_line(0);
     printf_tiny("Move Complete %c", 0x01);
     set_LCD_line(1);
-    printf_tiny("Again?(0) %c(2)", 0x00);
+    printf_tiny("Again?(0) %c(A)", 0x00);
     do {
       set_keypad_state_b();
       if(is_pressed(KEY_0)) {
           state.next = move_program;
           index = 1;
-      } else if(is_pressed(KEY_2)){
+      } else if(is_pressed(KEY_A)){
           state.next = main_menu;
           index = 1;
       }
@@ -348,25 +352,24 @@ void edit_program(void) {
     char index = 0;
     char newVal = 0;
     clear_LCD();
-    get_address("Enter Address: ", &start, 0);
+    get_address("Enter Address: ","(0000-FFFF)", &start, 0);
     do {
         index = 0;
         clear_line(0);
         printf_tiny("Current Address:");
         print_word((unsigned int)start);
-        clear_line(1);
-        printf_tiny("Current Val: ");
-        print_byte(*(start));
-        get_byte("New val: ", &newVal, 2);
+        get_byte("New val: ","(00-FF)", &newVal, 1);
         *start = newVal;
+        clear_line(2);
+        printf_tiny("Edit Complete!");
         clear_line(3);
-        printf_tiny("Edit Next? Y(0) %c(2)", 0x00);
+        printf_tiny("Edit Next?(0) %c(A)", 0x00);
         do {
             set_keypad_state_b();
             if(is_pressed(KEY_0)) {
                 start++;
                 index = 1;
-            } else if(is_pressed(KEY_2)) {
+            } else if(is_pressed(KEY_A)) {
                 state.next = main_menu;
                 index = -1;
             }
@@ -381,10 +384,10 @@ void fill_program(void) {
     unsigned char block_size;
     char index = 0;
     clear_LCD();
-    get_byte("Enter Val: ", &val, 0);
-    get_address("Enter Address: ", &start, 0);
+    get_address("Enter Address: ","(0000-FFFF)", &start, 0);
+    get_byte("Enter Fill Val: ","(00-FF)", &val, 0);
     do {
-        get_byte("Block Size: ", &block_size, 0);
+        get_byte("Block Size: ","(01-FF)", &block_size, 0);
     } while(block_size == 0);
     while(block_size --> 0) {
         *(start + block_size) = val;
@@ -393,13 +396,13 @@ void fill_program(void) {
     set_LCD_line(0);
     printf_tiny("Fill Complete %c", 0x01);
     set_LCD_line(1);
-    printf_tiny("Again?(0) %c(2)", 0x00);
+    printf_tiny("Again?(0) %c(A)", 0x00);
     do {
       set_keypad_state_b();
       if(is_pressed(KEY_0)) {
           state.next = fill_program;
           index = 1;
-      } else if(is_pressed(KEY_2)){
+      } else if(is_pressed(KEY_A)){
           state.next = main_menu;
           index = 1;
       }
@@ -414,7 +417,7 @@ void set_RTC_program(void) {
 void time_temp_program(void) {
     clear_LCD();
     set_LCD_line(2);
-    printf_tiny("Hold \"2\" to go %c", 0x00);
+    printf_tiny("Hold \"A\" to go %c", 0x00);
     do {
         do_conversion(&whole_temp, &frac_temp);
         clear_line(0);
@@ -425,7 +428,7 @@ void time_temp_program(void) {
         printf_tiny("%d%d", read_rtc(S10), read_rtc(S1));
         set_keypad_state_nb();
         delay(20);
-    } while(!is_pressed(KEY_2));
+    } while(!is_pressed(KEY_A));
     state.next = main_menu;
     return;
 }
