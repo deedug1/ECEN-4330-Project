@@ -158,62 +158,6 @@
 </layers>
 <schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">
 <libraries>
-<library name="frames" urn="urn:adsk.eagle:library:229">
-<description>&lt;b&gt;Frames for Sheet and Layout&lt;/b&gt;</description>
-<packages>
-</packages>
-<symbols>
-<symbol name="LETTER_L" urn="urn:adsk.eagle:symbol:13870/1" library_version="1">
-<frame x1="0" y1="0" x2="248.92" y2="185.42" columns="12" rows="17" layer="94" border-left="no" border-top="no" border-right="no" border-bottom="no"/>
-</symbol>
-<symbol name="DOCFIELD" urn="urn:adsk.eagle:symbol:13864/1" library_version="1">
-<wire x1="0" y1="0" x2="71.12" y2="0" width="0.1016" layer="94"/>
-<wire x1="101.6" y1="15.24" x2="87.63" y2="15.24" width="0.1016" layer="94"/>
-<wire x1="0" y1="0" x2="0" y2="5.08" width="0.1016" layer="94"/>
-<wire x1="0" y1="5.08" x2="71.12" y2="5.08" width="0.1016" layer="94"/>
-<wire x1="0" y1="5.08" x2="0" y2="15.24" width="0.1016" layer="94"/>
-<wire x1="101.6" y1="15.24" x2="101.6" y2="5.08" width="0.1016" layer="94"/>
-<wire x1="71.12" y1="5.08" x2="71.12" y2="0" width="0.1016" layer="94"/>
-<wire x1="71.12" y1="5.08" x2="87.63" y2="5.08" width="0.1016" layer="94"/>
-<wire x1="71.12" y1="0" x2="101.6" y2="0" width="0.1016" layer="94"/>
-<wire x1="87.63" y1="15.24" x2="87.63" y2="5.08" width="0.1016" layer="94"/>
-<wire x1="87.63" y1="15.24" x2="0" y2="15.24" width="0.1016" layer="94"/>
-<wire x1="87.63" y1="5.08" x2="101.6" y2="5.08" width="0.1016" layer="94"/>
-<wire x1="101.6" y1="5.08" x2="101.6" y2="0" width="0.1016" layer="94"/>
-<wire x1="0" y1="15.24" x2="0" y2="22.86" width="0.1016" layer="94"/>
-<wire x1="101.6" y1="35.56" x2="0" y2="35.56" width="0.1016" layer="94"/>
-<wire x1="101.6" y1="35.56" x2="101.6" y2="22.86" width="0.1016" layer="94"/>
-<wire x1="0" y1="22.86" x2="101.6" y2="22.86" width="0.1016" layer="94"/>
-<wire x1="0" y1="22.86" x2="0" y2="35.56" width="0.1016" layer="94"/>
-<wire x1="101.6" y1="22.86" x2="101.6" y2="15.24" width="0.1016" layer="94"/>
-<text x="1.27" y="1.27" size="2.54" layer="94">Date:</text>
-<text x="12.7" y="1.27" size="2.54" layer="94">&gt;LAST_DATE_TIME</text>
-<text x="72.39" y="1.27" size="2.54" layer="94">Sheet:</text>
-<text x="86.36" y="1.27" size="2.54" layer="94">&gt;SHEET</text>
-<text x="88.9" y="11.43" size="2.54" layer="94">REV:</text>
-<text x="1.27" y="19.05" size="2.54" layer="94">TITLE:</text>
-<text x="1.27" y="11.43" size="2.54" layer="94">Document Number:</text>
-<text x="17.78" y="19.05" size="2.54" layer="94">&gt;DRAWING_NAME</text>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="LETTER_L" urn="urn:adsk.eagle:component:13920/1" prefix="FRAME" uservalue="yes" library_version="1">
-<description>&lt;b&gt;FRAME&lt;/b&gt;&lt;p&gt;
-LETTER landscape</description>
-<gates>
-<gate name="G$1" symbol="LETTER_L" x="0" y="0"/>
-<gate name="G$2" symbol="DOCFIELD" x="147.32" y="0" addlevel="must"/>
-</gates>
-<devices>
-<device name="">
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="adafruit" urn="urn:adsk.eagle:library:420">
 <packages>
 <package name="R0402" library_version="1">
@@ -16088,6 +16032,60 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 </deviceset>
 </devicesets>
 </library>
+<library name="frame user">
+<packages>
+</packages>
+<symbols>
+<symbol name="LETTER_L">
+<frame x1="0" y1="0" x2="248.92" y2="185.42" columns="12" rows="17" layer="94" border-left="no" border-top="no" border-right="no" border-bottom="no"/>
+</symbol>
+<symbol name="DOCFIELD">
+<wire x1="0" y1="0" x2="71.12" y2="0" width="0.1016" layer="94"/>
+<wire x1="101.6" y1="15.24" x2="87.63" y2="15.24" width="0.1016" layer="94"/>
+<wire x1="0" y1="0" x2="0" y2="5.08" width="0.1016" layer="94"/>
+<wire x1="0" y1="5.08" x2="71.12" y2="5.08" width="0.1016" layer="94"/>
+<wire x1="0" y1="5.08" x2="0" y2="15.24" width="0.1016" layer="94"/>
+<wire x1="101.6" y1="15.24" x2="101.6" y2="5.08" width="0.1016" layer="94"/>
+<wire x1="71.12" y1="5.08" x2="71.12" y2="0" width="0.1016" layer="94"/>
+<wire x1="71.12" y1="5.08" x2="87.63" y2="5.08" width="0.1016" layer="94"/>
+<wire x1="71.12" y1="0" x2="101.6" y2="0" width="0.1016" layer="94"/>
+<wire x1="87.63" y1="15.24" x2="87.63" y2="5.08" width="0.1016" layer="94"/>
+<wire x1="87.63" y1="15.24" x2="0" y2="15.24" width="0.1016" layer="94"/>
+<wire x1="87.63" y1="5.08" x2="101.6" y2="5.08" width="0.1016" layer="94"/>
+<wire x1="101.6" y1="5.08" x2="101.6" y2="0" width="0.1016" layer="94"/>
+<wire x1="0" y1="15.24" x2="0" y2="22.86" width="0.1016" layer="94"/>
+<wire x1="101.6" y1="35.56" x2="0" y2="35.56" width="0.1016" layer="94"/>
+<wire x1="101.6" y1="35.56" x2="101.6" y2="22.86" width="0.1016" layer="94"/>
+<wire x1="0" y1="22.86" x2="101.6" y2="22.86" width="0.1016" layer="94"/>
+<wire x1="0" y1="22.86" x2="0" y2="35.56" width="0.1016" layer="94"/>
+<wire x1="101.6" y1="22.86" x2="101.6" y2="15.24" width="0.1016" layer="94"/>
+<text x="1.27" y="1.27" size="2.54" layer="94">Date:</text>
+<text x="12.7" y="1.27" size="2.54" layer="94">&gt;LAST_DATE_TIME</text>
+<text x="72.39" y="1.27" size="2.54" layer="94">Sheet:</text>
+<text x="88.9" y="11.43" size="2.54" layer="94">REV:</text>
+<text x="1.27" y="19.05" size="2.54" layer="94">TITLE:</text>
+<text x="1.27" y="11.43" size="2.54" layer="94">Document Number:</text>
+<text x="17.78" y="19.05" size="2.54" layer="94">&gt;DRAWING_NAME</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="LETTER_L" prefix="FRAME" uservalue="yes">
+<description>&lt;b&gt;FRAME&lt;/b&gt;&lt;p&gt;
+LETTER landscape</description>
+<gates>
+<gate name="G$1" symbol="LETTER_L" x="0" y="0"/>
+<gate name="G$2" symbol="DOCFIELD" x="147.32" y="0" addlevel="must"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -16111,12 +16109,13 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <part name="CLK" library="crystal" library_urn="urn:adsk.eagle:library:204" deviceset="XO-" device="8" package3d_urn="urn:adsk.eagle:package:12069/1" value="XC269-ND"/>
 <part name="SUPPLY4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="SUPPLY10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
-<part name="FRAME7" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME7" library="frame user" deviceset="LETTER_L" device=""/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">Clock Circuit</text>
+<text x="233.68" y="2.54" size="2.54" layer="94" align="center">2/11</text>
 </plain>
 <instances>
 <instance part="CLK" gate="G$1" x="22.86" y="162.56" rot="R90"/>
@@ -16168,7 +16167,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <variantdefs>
 </variantdefs>
 <parts>
-<part name="FRAME2" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME2" library="frame user" deviceset="LETTER_L" device=""/>
 <part name="P+2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 <part name="P+3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 <part name="GND2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -16184,6 +16183,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">ROM</text>
+<text x="233.68" y="2.54" size="2.54" layer="94" align="center">4/11</text>
 </plain>
 <instances>
 <instance part="FRAME2" gate="G$1" x="0" y="0"/>
@@ -16550,7 +16550,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <variantdefs>
 </variantdefs>
 <parts>
-<part name="FRAME3" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME3" library="frame user" deviceset="LETTER_L" device=""/>
 <part name="RAM1" library="Fuckboiz" deviceset="RAM_32K_8" device=""/>
 <part name="RAM2" library="Fuckboiz" deviceset="RAM_32K_8" device=""/>
 <part name="SUPPLY2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -16564,6 +16564,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">RAM</text>
+<text x="233.68" y="2.54" size="2.54" layer="94" align="center">5/11</text>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="0" y="0"/>
@@ -16926,7 +16927,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <variantdefs>
 </variantdefs>
 <parts>
-<part name="FRAME6" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME6" library="frame user" deviceset="LETTER_L" device=""/>
 <part name="7SEGLATCH" library="Fuckboiz" deviceset="74*573" device="N" technology="AS" value="74AS573N"/>
 <part name="SUPPLY7" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="R2" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="R-US_" device="0204/7" value="330"/>
@@ -16948,6 +16949,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">7 Segment Port</text>
 <text x="73.66" y="172.72" size="1.27" layer="97">330</text>
+<text x="233.68" y="2.54" size="2.54" layer="94" align="center">6/11</text>
 </plain>
 <instances>
 <instance part="FRAME6" gate="G$1" x="0" y="0"/>
@@ -17199,7 +17201,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <variantdefs>
 </variantdefs>
 <parts>
-<part name="FRAME10" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME10" library="frame user" deviceset="LETTER_L" device=""/>
 <part name="PWRJACK" library="Fuckboiz" deviceset="JACK-PLUG" device="0" value="2.1mm"/>
 <part name="PWRLED" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="LED" device="5MM"/>
 <part name="S1" library="Fuckboiz" deviceset="SPDT_SWITCH" device="-PTH-11.6X4.0MM-LOCK"/>
@@ -17212,6 +17214,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">Power input</text>
+<text x="236.22" y="2.54" size="2.54" layer="94" align="center">11/11</text>
 </plain>
 <instances>
 <instance part="FRAME10" gate="G$1" x="0" y="0"/>
@@ -17299,7 +17302,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <variantdefs>
 </variantdefs>
 <parts>
-<part name="FRAME8" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME8" library="frame user" deviceset="LETTER_L" device=""/>
 <part name="LCD" library="Fuckboiz" deviceset="LCD" device="" value="1528-1508-ND"/>
 <part name="R10" library="Fuckboiz" deviceset="3362P-1-103LF_POT" device=""/>
 <part name="P+4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
@@ -17316,6 +17319,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">LCD</text>
+<text x="233.68" y="2.54" size="2.54" layer="94" align="center">7/11</text>
 </plain>
 <instances>
 <instance part="FRAME8" gate="G$1" x="0" y="0"/>
@@ -17615,7 +17619,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <variantdefs>
 </variantdefs>
 <parts>
-<part name="FRAME11" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME11" library="frame user" deviceset="LETTER_L" device=""/>
 <part name="P+9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 <part name="GND7" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="RTC" library="Fuckboiz" deviceset="RTC-72421" device="" value="RTC-72421"/>
@@ -17626,6 +17630,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">RTC</text>
+<text x="233.68" y="2.54" size="2.54" layer="94" align="center">9/11</text>
 </plain>
 <instances>
 <instance part="FRAME11" gate="G$1" x="0" y="0"/>
@@ -17787,7 +17792,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <variantdefs>
 </variantdefs>
 <parts>
-<part name="FRAME9" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME9" library="frame user" deviceset="LETTER_L" device=""/>
 <part name="ADC" library="Fuckboiz" deviceset="ADC" device="" value="TLC0820ACN"/>
 <part name="TEMPSENS" library="Fuckboiz" deviceset="TEMP_SENSOR" device=""/>
 <part name="GND8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -17801,6 +17806,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">ADC</text>
+<text x="233.68" y="2.54" size="2.54" layer="94" align="center">8/11</text>
 </plain>
 <instances>
 <instance part="FRAME9" gate="G$1" x="0" y="0"/>
@@ -17997,7 +18003,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <part name="DEMULTIPLEXER" library="Fuckboiz" deviceset="74*573" device="N" technology="AS"/>
 <part name="SUPPLY1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 <part name="SUPPLY6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="FRAME1" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device="" value="Microcontroller Frame"/>
+<part name="FRAME1" library="frame user" deviceset="LETTER_L" device="" value="Microcontroller Frame"/>
 <part name="R1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:23498/1" value="8.2k"/>
 <part name="SUPPLY9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="RSTSWITCH" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="MOMENTARY-SWITCH-SPST" device="-PTH-6.0MM" package3d_urn="urn:adsk.eagle:package:40163/1"/>
@@ -18011,7 +18017,8 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheets>
 <sheet>
 <plain>
-<text x="149.86" y="30.48" size="2.54" layer="94">Microcontroller</text>
+<text x="149.86" y="30.48" size="2.54" layer="94">Microprocessor</text>
+<text x="233.68" y="2.54" size="2.54" layer="94" align="center">1/11</text>
 </plain>
 <instances>
 <instance part="UC" gate="G$1" x="55.88" y="144.78"/>
@@ -18510,7 +18517,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <variantdefs>
 </variantdefs>
 <parts>
-<part name="FRAME4" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME4" library="frame user" deviceset="LETTER_L" device=""/>
 <part name="CSLGC" library="pal" library_urn="urn:adsk.eagle:library:321" deviceset="22V10" device="" package3d_urn="urn:adsk.eagle:package:22118/1" value="GAL22V10D"/>
 <part name="P+1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 <part name="GND1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -18530,6 +18537,7 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <text x="78.74" y="152.4" size="1.778" layer="97">= PSEN + A15</text>
 <text x="27.94" y="132.08" size="1.778" layer="97">PSEN Must be high for this to work during external memory access</text>
 <text x="78.74" y="160.02" size="1.778" layer="97">= P3.5 &amp; PSEN &amp; A13 &amp; ~A14 &amp; ~A15 &amp; ~WR</text>
+<text x="233.68" y="2.54" size="2.54" layer="94" align="center">3/11</text>
 </plain>
 <instances>
 <instance part="FRAME4" gate="G$1" x="0" y="0"/>
@@ -18720,13 +18728,14 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <variantdefs>
 </variantdefs>
 <parts>
-<part name="FRAME5" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="FRAME5" library="frame user" deviceset="LETTER_L" device=""/>
 <part name="KEYPAD" library="Fuckboiz" deviceset="KEYPAD4X4" device=""/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="2.54" layer="94">Keypad</text>
+<text x="236.22" y="2.54" size="2.54" layer="94" align="center">10/11</text>
 </plain>
 <instances>
 <instance part="FRAME5" gate="G$1" x="0" y="0"/>
@@ -18823,17 +18832,13 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <sheet>
 <description>Overall schematic</description>
 <plain>
-<frame x1="0" y1="0" x2="355.6" y2="205.74" columns="8" rows="5" layer="94"/>
-<text x="10.16" y="187.96" size="2.54" layer="97">Justin Pachl
-ECEN 4330
-OVERALL SCHEMATIC</text>
 </plain>
 <moduleinsts>
-<moduleinst name="CLK" module="CLOCK" x="35.56" y="119.38"/>
+<moduleinst name="CLK" module="CLOCK" x="81.28" y="149.86"/>
 <moduleinst name="ROM" module="ROM" x="317.5" y="60.96"/>
 <moduleinst name="RAM" module="RAM" x="317.5" y="129.54"/>
 <moduleinst name="7SEG" module="7SEG" x="236.22" y="93.98"/>
-<moduleinst name="PWR" module="POWERSP" x="35.56" y="149.86"/>
+<moduleinst name="PWR" module="POWERSP" x="81.28" y="177.8"/>
 <moduleinst name="LCD" module="LCD" x="223.52" y="167.64"/>
 <moduleinst name="RTC" module="RTC" x="182.88" y="43.18"/>
 <moduleinst name="ADC" module="ADC" x="236.22" y="43.18"/>
@@ -18848,9 +18853,9 @@ OVERALL SCHEMATIC</text>
 <instance part="GND4" gate="1" x="213.36" y="30.48"/>
 <instance part="GND5" gate="1" x="160.02" y="30.48"/>
 <instance part="GND6" gate="1" x="58.42" y="40.64"/>
-<instance part="GND7" gate="1" x="12.7" y="106.68"/>
-<instance part="GND8" gate="1" x="15.24" y="137.16"/>
-<instance part="P+1" gate="VCC" x="58.42" y="147.32"/>
+<instance part="GND7" gate="1" x="58.42" y="137.16"/>
+<instance part="GND8" gate="1" x="60.96" y="165.1"/>
+<instance part="P+1" gate="VCC" x="104.14" y="175.26"/>
 <instance part="P+2" gate="VCC" x="58.42" y="53.34"/>
 <instance part="P+3" gate="VCC" x="205.74" y="40.64"/>
 <instance part="P+4" gate="VCC" x="259.08" y="40.64"/>
@@ -18859,7 +18864,7 @@ OVERALL SCHEMATIC</text>
 <instance part="P+7" gate="VCC" x="259.08" y="149.86"/>
 <instance part="P+8" gate="VCC" x="259.08" y="91.44"/>
 <instance part="GND9" gate="1" x="215.9" y="81.28"/>
-<instance part="P+9" gate="VCC" x="12.7" y="119.38"/>
+<instance part="P+9" gate="VCC" x="58.42" y="149.86"/>
 <instance part="GND10" gate="1" x="119.38" y="76.2"/>
 <instance part="P+10" gate="VCC" x="167.64" y="114.3"/>
 </instances>
@@ -19058,13 +19063,13 @@ OVERALL SCHEMATIC</text>
 </segment>
 <segment>
 <portref moduleinst="CLK" port="GND"/>
-<wire x1="15.24" y1="111.76" x2="12.7" y2="111.76" width="0.1524" layer="91"/>
-<wire x1="12.7" y1="111.76" x2="12.7" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="142.24" x2="58.42" y2="142.24" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="142.24" x2="58.42" y2="139.7" width="0.1524" layer="91"/>
 <pinref part="GND7" gate="1" pin="GND"/>
 </segment>
 <segment>
 <portref moduleinst="PWR" port="GND"/>
-<wire x1="15.24" y1="142.24" x2="15.24" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="170.18" x2="60.96" y2="167.64" width="0.1524" layer="91"/>
 <pinref part="GND8" gate="1" pin="GND"/>
 </segment>
 <segment>
@@ -19085,8 +19090,8 @@ OVERALL SCHEMATIC</text>
 <net name="VCC" class="0">
 <segment>
 <portref moduleinst="PWR" port="VCC"/>
-<wire x1="58.42" y1="142.24" x2="55.88" y2="142.24" width="0.1524" layer="91"/>
-<wire x1="58.42" y1="142.24" x2="58.42" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="170.18" x2="101.6" y2="170.18" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="170.18" x2="104.14" y2="172.72" width="0.1524" layer="91"/>
 <pinref part="P+1" gate="VCC" pin="VCC"/>
 </segment>
 <segment>
@@ -19134,8 +19139,8 @@ OVERALL SCHEMATIC</text>
 </segment>
 <segment>
 <portref moduleinst="CLK" port="VCC"/>
-<wire x1="15.24" y1="114.3" x2="12.7" y2="114.3" width="0.1524" layer="91"/>
-<wire x1="12.7" y1="114.3" x2="12.7" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="144.78" x2="58.42" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="144.78" x2="58.42" y2="147.32" width="0.1524" layer="91"/>
 <pinref part="P+9" gate="VCC" pin="VCC"/>
 </segment>
 <segment>
@@ -19246,11 +19251,15 @@ OVERALL SCHEMATIC</text>
 <wire x1="182.88" y1="101.6" x2="162.56" y2="101.6" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="CLKSIG" class="0">
+<net name="N$1" class="0">
 <segment>
-<portref moduleinst="CLK" port="CLKOUT"/>
 <portref moduleinst="MC" port="XTAL1"/>
-<wire x1="55.88" y1="127" x2="60.96" y2="127" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="127" x2="58.42" y2="127" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="127" x2="58.42" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="132.08" x2="104.14" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="132.08" x2="104.14" y2="157.48" width="0.1524" layer="91"/>
+<portref moduleinst="CLK" port="CLKOUT"/>
+<wire x1="104.14" y1="157.48" x2="101.6" y2="157.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
@@ -19355,10 +19364,6 @@ OVERALL SCHEMATIC</text>
 </schematic>
 </drawing>
 <compatibility>
-<note version="6.3" minversion="6.2.2" severity="warning">
-Since Version 6.2.2 text objects can contain more than one line,
-which will not be processed correctly with this version.
-</note>
 <note version="8.2" severity="warning">
 Since Version 8.2, EAGLE supports online libraries. The ids
 of those online libraries will not be understood (or retained)

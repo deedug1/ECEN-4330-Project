@@ -4332,6 +4332,39 @@ design rules under a new name.</description>
 <wire x1="25.527" y1="41.815" x2="25.527" y2="36.322" width="0.508" layer="1"/>
 <wire x1="138.43" y1="30.48" x2="127" y2="41.91" width="0.508" layer="1"/>
 <wire x1="127" y1="41.91" x2="127" y2="44.45" width="0.508" layer="1"/>
+<wire x1="90.424" y1="165.862" x2="86.741" y2="160.274" width="0" layer="19" extent="1-1"/>
+<wire x1="61.214" y1="174.752" x2="86.741" y2="160.274" width="0" layer="19" extent="1-1"/>
+<wire x1="38.735" y1="167.386" x2="61.214" y2="174.752" width="0" layer="19" extent="1-1"/>
+<wire x1="11.684" y1="178.842" x2="38.735" y2="167.386" width="0" layer="19" extent="1-1"/>
+<wire x1="8.684" y1="183.642" x2="11.684" y2="178.842" width="0" layer="19" extent="1-1"/>
+<wire x1="71.882" y1="121.92" x2="86.741" y2="160.274" width="0" layer="19" extent="1-1"/>
+<wire x1="86.741" y1="83.058" x2="71.882" y2="121.92" width="0" layer="19" extent="1-1"/>
+<wire x1="71.882" y1="44.45" x2="86.741" y2="83.058" width="0" layer="19" extent="1-1"/>
+<wire x1="54.61" y1="25.4" x2="64.643" y2="31.75" width="0" layer="19" extent="1-1"/>
+<wire x1="62.23" y1="6.35" x2="49.53" y2="20.32" width="0" layer="19" extent="1-1"/>
+<wire x1="30.734" y1="6.858" x2="49.53" y2="20.32" width="0" layer="19" extent="1-1"/>
+<wire x1="23.114" y1="6.858" x2="30.734" y2="6.858" width="0" layer="19" extent="1-1"/>
+<wire x1="18.034" y1="21.971" x2="23.114" y2="6.858" width="0" layer="19" extent="1-1"/>
+<wire x1="14.224" y1="28.448" x2="18.034" y2="21.971" width="0" layer="19" extent="1-1"/>
+<wire x1="25.527" y1="36.322" x2="14.224" y2="28.448" width="0" layer="19" extent="1-1"/>
+<wire x1="114.3" y1="128.143" x2="86.741" y2="160.274" width="0" layer="19" extent="1-1"/>
+<wire x1="119.38" y1="125.73" x2="114.3" y2="128.143" width="0" layer="19" extent="1-1"/>
+<wire x1="142.24" y1="125.73" x2="119.38" y2="125.73" width="0" layer="19" extent="1-1"/>
+<wire x1="145.161" y1="96.774" x2="142.24" y2="125.73" width="0" layer="19" extent="1-1"/>
+<wire x1="165.1" y1="95.25" x2="145.161" y2="96.774" width="0" layer="19" extent="1-1"/>
+<wire x1="167.513" y1="100.33" x2="165.1" y2="95.25" width="0" layer="19" extent="1-1"/>
+<wire x1="165.1" y1="72.39" x2="165.1" y2="95.25" width="0" layer="19" extent="1-1"/>
+<wire x1="142.24" y1="69.85" x2="165.1" y2="69.85" width="0" layer="19" extent="1-1"/>
+<wire x1="189.23" y1="110.617" x2="167.513" y2="100.33" width="0" layer="19" extent="1-1"/>
+<wire x1="194.31" y1="108.204" x2="189.23" y2="110.617" width="0" layer="19" extent="1-1"/>
+<wire x1="217.17" y1="108.204" x2="194.31" y2="108.204" width="0" layer="19" extent="1-1"/>
+<wire x1="229.87" y1="115.4938" x2="217.17" y2="108.204" width="0" layer="19" extent="1-1"/>
+<wire x1="127" y1="44.45" x2="142.24" y2="69.85" width="0" layer="19" extent="1-1"/>
+<wire x1="165.1" y1="34.29" x2="138.43" y2="30.48" width="0" layer="19" extent="1-1"/>
+<wire x1="38.481" y1="90.424" x2="71.882" y2="121.92" width="0" layer="19" extent="1-1"/>
+<wire x1="23.13" y1="121.682" x2="38.481" y2="90.424" width="0" layer="19" extent="1-1"/>
+<wire x1="144.907" y1="187.96" x2="90.424" y2="165.862" width="0" layer="19" extent="1-1"/>
+<wire x1="157.48" y1="186.69" x2="144.907" y2="187.96" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="VCC">
 <contactref element="LCD:COLORLATCH" pad="20"/>
@@ -6119,13 +6152,10 @@ design rules under a new name.</description>
 <wire x1="31.62928125" y1="188.33128125" x2="32.02" y2="188.722" width="0.508" layer="1"/>
 <wire x1="23.700625" y1="188.33128125" x2="31.62928125" y2="188.33128125" width="0.508" layer="1"/>
 </signal>
-<signal name="CLKSIG">
-<contactref element="CLK:CLK" pad="5"/>
+<signal name="N$1">
 <contactref element="MC:UC" pad="19"/>
-<wire x1="130.81" y1="30.48" x2="127" y2="30.48" width="0.254" layer="1"/>
-<wire x1="124.919" y1="32.561" x2="124.919" y2="45.72" width="0.254" layer="1"/>
-<wire x1="127" y1="30.48" x2="124.919" y2="32.561" width="0.254" layer="1"/>
-<wire x1="124.919" y1="45.72" x2="127" y2="46.99" width="0.254" layer="1"/>
+<contactref element="CLK:CLK" pad="5"/>
+<wire x1="130.81" y1="30.48" x2="127" y2="46.99" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 </board>

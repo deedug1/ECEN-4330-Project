@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 // RTC Addresses
 #define S1 0x00
 #define S10 0x01
@@ -16,6 +17,7 @@
 #define CD 0x0D
 #define CE 0x0E
 #define CF 0x0F
+
 // Keys for KEYPADSTATE
 #define KEY_1 (1 << 0)
 #define KEY_4 (1 << 1)
@@ -33,6 +35,7 @@
 #define KEY_B (1 << 13)
 #define KEY_C (1 << 14)
 #define KEY_D (1 << 15)
+
 // type state
 struct state;
 typedef void state_fn(void);
@@ -40,6 +43,7 @@ struct state {
     state_fn * next;
     int i;
 };
+
 // External Hardware addresses
 __xdata unsigned char * __code LCD_BUSY = 0x2002;
 __xdata unsigned char * __code LCD_CMD = 0X2000;
@@ -48,6 +52,7 @@ __xdata unsigned char * __code LCD_COLOR = 0x4000;
 __xdata unsigned char * __code SEG_DISPLAY = 0x0000;
 __xdata unsigned char * __code ADC = 0x6000;
 __xdata unsigned char * __code RTC = 0x8000;
+
 // Constants and Tables
 __code unsigned char LCD_LINES[] = {0x00, 0x40, 0x14, 0x54}; // Starting point for each line on the LCD
 __code unsigned char KEYPAD_CHARS[] = { '1', '4', '7', 'F',
@@ -61,20 +66,22 @@ __code unsigned char KEYPAD_HEX[] = {   0x01, 0x04, 0x07, 0x0F,
 __code unsigned char HOME[] =   {0x00, 0x04, 0x0A, 0x11, 0x0E, 0x0E, 0x00, 0x00}; // Home Icon
 __code unsigned char SMILE[] =  {0x00, 0x00, 0x0A, 0x0A, 0x11, 0x0E, 0x00, 0x00}; // Smile Icon
 __code unsigned char WORK[] =   {0x1F, 0x11, 0x15, 0x15, 0x11, 0x15, 0x11, 0x1F}; // Work Icon
+
 // Special function register locations
 __sbit __at (0xB5) IO_M;
 __sfr __at (0x90) P1;
+__sfr __at (0xF0) BREG;
+
 // Global variables
 unsigned int __xdata KEYPAD_STATE; // State of keypad since last scan
 int __xdata whole_temp; // whole part of temperature
 int __xdata frac_temp; // Fraction part of temperature
 char __xdata last_key; // Last Keypad index since last scan
 
-__sfr __at (0xF0) BREG;
-// Prototypes
 // Delays
 void delay1ms();
 void delay(int x);
+
 // LCD interfacing functions
 void init_LCD();
 void clear_LCD();
@@ -85,6 +92,7 @@ void putchar(char c);
 void print_byte(unsigned char byte);
 void print_word(unsigned int word);
 void set_CG_char(char c, __code char * map);
+
 // Keypad interfacing functions
 char set_keypad_state_nb();
 char set_keypad_state_b();
@@ -92,17 +100,22 @@ char is_pressed(int key);
 void get_address(char * msg, char * rng, __xdata char ** put, char line);
 void get_byte(char * msg, char * rng, char * put, char line);
 void scan_keypad();
+
 // RTC interfacing functions
 void init_RTC();
 void while_rtc_busy();
 char read_rtc(char reg);
+
 // 7Seg functions...
 void change_display(char c);
+
 // ADC interfacing functions
 void do_conversion(int * whole, int * frac);
+
 // Memory Functions
 char ram_test();
 void memory_dump_line( __xdata char * start, unsigned char num_bytes, char line);
+
 // Programs
 void main_menu(void);
 void debug(void);
@@ -113,16 +126,19 @@ void move_program(void);
 void set_RTC_program(void);
 void time_temp_program(void);
 void oregon_program(void);
+
 // Program menu
 __code state_fn * programs[] = {dump_program, search_program, edit_program, move_program, fill_program, 
-                               time_temp_program, debug}; // TODO make struct for pointer and string
+                               time_temp_program, debug}; 
 __code char * program_strings[] = { "Dump","Search", "Edit", "Move", "Fill",
                                     "Time & Temp", "Debug"};
 __code unsigned char num_programs = 7;
+
 // Current Program state
 struct state __xdata state;
 int main(void) {
-    init_LCD(); // Init hardware
+    // Init hardware
+    init_LCD(); 
     init_RTC();
     *LCD_COLOR = 0x04; // Set yellow screen
     // Test Ram
@@ -134,8 +150,9 @@ int main(void) {
         printf_tiny("    GET NEW RAM    ");
         while(1); // Loop for enternity you failure
     }
-    state.next = main_menu; // Set first state
-    state.i = 0; // Ummm
+    // Set first state
+    state.next = main_menu; 
+    state.i = 0;
     // Load custom characters
     set_CG_char(0, HOME);
     set_CG_char(1, SMILE);
@@ -145,6 +162,11 @@ int main(void) {
         state.next();
     }
 }
+
+/**
+ * Main menu
+ * Home screen of the system all programs are selected from this screen
+ **/
 void main_menu(void) {
     unsigned char index = 0;
     clear_LCD();
@@ -169,10 +191,11 @@ void main_menu(void) {
     state.next = programs[index];
     return;
 }
+
 void get_address(char * msg, char * rng, __xdata char ** put, char line) {
     char index = 0;
     do {
-        *(put) = 0; // Clear the address BOIIIII
+        *(put) = 0; 
         clear_line(line + 2);
         clear_line(line + 1); 
         printf_tiny("%s", rng);       
@@ -186,14 +209,15 @@ void get_address(char * msg, char * rng, __xdata char ** put, char line) {
         clear_line(line + 2);
         printf_tiny("Redo(F) Confirm(any)");
         set_keypad_state_b();
-    } while(is_pressed(KEY_F));
+    } while(is_pressed(KEY_F)); // Submit confirmation
 
     return;
 }
+
 void get_byte(char * msg, char * rng, char * put, char line) {
     char index = 0;
     do {
-        *(put) = 0; // Clear the byte BOOIIIIII
+        *(put) = 0;
         clear_line(line + 2);
         clear_line(line + 1);
         printf_tiny("%s", rng);        
@@ -207,8 +231,13 @@ void get_byte(char * msg, char * rng, char * put, char line) {
         clear_line(line + 2);
         printf_tiny("Redo(F) Confirm(any)");
         set_keypad_state_b();
-    } while(is_pressed(KEY_F));
+    } while(is_pressed(KEY_F)); // Submit confirmation
 }
+
+/**
+ * Debug Program
+ * Program used to test that the hardware of the system is functioning
+ **/
 void debug(void) {
     __xdata char * dump_index = 0;
     char index = 0;
@@ -237,6 +266,10 @@ void debug(void) {
     return;   
 }
 
+/**
+ * Dump Program
+ * Program used to display contents of RAM
+ **/
 void dump_program(void) {
     // local vars
     __xdata char * start = 0;
@@ -246,6 +279,7 @@ void dump_program(void) {
     clear_line(0);
     printf_tiny("Prev(1) Next(2) %c(A)", 0x00);
     do {
+        // Display
         memory_dump_line(start, 4, 1);
         start += 4;
         memory_dump_line(start, 4, 2);
@@ -253,20 +287,26 @@ void dump_program(void) {
         memory_dump_line(start, 4, 3);
         start += 4;
         do {
+            // Request next step
             set_keypad_state_b();
             if(is_pressed(KEY_1)) {
-                start -= 24; // Will loop
+                start -= 24; // Move back
                 input = 1;
             } else if(is_pressed(KEY_A)) {
                 input = 0xFF;
                 state.next = main_menu;
             } else if(is_pressed(KEY_2)) {
-                input = 1; // Will loop
+                input = 1; // Move forward
             }
-        }while(input == 0); // Make sure 0-2 are clicked
+        } while(input == 0); 
     } while(input != 0xFF);
     return;
 }
+
+/**
+ * Search Program
+ * Program used to search contents of RAM
+ **/
 void search_program(void) {
     __xdata unsigned char * start = 0;
     unsigned int count = 0;
@@ -316,6 +356,11 @@ void search_program(void) {
     } while(found == 0);
     return;
 }
+
+/**
+ * Move Program
+ * Program used to duplicate blocks of RAM
+ **/
 void move_program(void) {
     __xdata char * start = 0;
     __xdata char * dest = 0;
@@ -347,6 +392,11 @@ void move_program(void) {
     } while(index == 0);
     return;
 }
+
+/**
+ * Edit Program
+ * Program used to edit contents of RAM byte by byte
+ **/
 void edit_program(void) {
     __xdata char * start = 0;
     char index = 0;
@@ -378,6 +428,11 @@ void edit_program(void) {
     } while(index != -1);
     return;
 }
+
+/**
+ * Fill Program
+ * Program used to edit blocks of RAM
+ **/
 void fill_program(void) {
     __xdata char * start;
     char val;
@@ -410,10 +465,13 @@ void fill_program(void) {
     return;
     
 }
-void set_RTC_program(void) {
-    oregon_program();
-    return;
-}
+
+
+
+/**
+ * Time & Temp Program
+ * Program used to display temperature and system uptime
+ **/
 void time_temp_program(void) {
     clear_LCD();
     set_LCD_line(2);
@@ -432,6 +490,12 @@ void time_temp_program(void) {
     state.next = main_menu;
     return;
 }
+// Not done / ideas for programs
+void set_RTC_program(void) {
+    oregon_program();
+    return;
+}
+
 void oregon_program(void) {
     char i = 0;
     clear_LCD();
@@ -451,6 +515,8 @@ void oregon_program(void) {
     state.next = main_menu;
     return;
 }
+
+// Start of helper functions
 void delay1ms() {
     unsigned char x = 10;
     unsigned char y = 128;
@@ -469,10 +535,6 @@ void delay(int x) {
     }
     return;
 }
-/* putchar
- * Function that writes a character to the LCD
- * c character to write
- */
 void putchar(char c) {
     IO_M = 1;
     while(*LCD_BUSY & 0x80); // Waits until the LCD is not busy
@@ -593,10 +655,6 @@ void set_CG_char(char c, __code char * map) {
     IO_M = 0;
     return;
 }
-/* change_display()
- *  Function that writes to the 7seg
- *  c: byte to write
- */
 void change_display(char c){
     IO_M = 1;
     *SEG_DISPLAY = c;
@@ -700,12 +758,6 @@ char ram_test() {
     printf_tiny("===");
     return 0;
 }
-/* memory_dump_line
- * Dumps a specified number of bytes starting at start from external memory
- * start: address to start dump from
- * num_bytes: number of bytes to dump ( < 4) 
- * line: the line we want to print on
- */
 void memory_dump_line(__xdata char * start, unsigned char num_bytes, char line) {
     char line_start;
     char current;
