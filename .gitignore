@@ -15,6 +15,7 @@
 
 # Pictures
 /Board pics
+/target
 
 # Unused
 *.asm

@@ -78,7 +78,7 @@ unsigned int __xdata KEYPAD_STATE; // State of keypad since last scan
 int __xdata whole_temp; // whole part of temperature
 int __xdata frac_temp; // Fraction part of temperature
 char __xdata last_key; // Last Keypad index since last scan
-
+unsigned char __xdata parity;
 // Delays
 void delay1ms();
 void delay(int x);
@@ -113,6 +113,14 @@ void change_display(char c);
 // ADC interfacing functions
 void do_conversion(int * whole, int * frac);
 
+// Serial functions
+void set_baud(unsigned int baud);
+void set_parity(unsigned char par);
+void init_uart(unsigned int baud, unsigned char par);
+void enable_recieve();
+char recieve_data();
+void send_data(unsigned char data);
+
 // Memory Functions
 char ram_test();
 void memory_dump_line( __xdata char * start, unsigned char num_bytes, char line);
@@ -126,13 +134,14 @@ void edit_program(void);
 void move_program(void);
 void set_RTC_program(void);
 void time_temp_program(void);
+void serial_program(void);
 void oregon_program(void);
 
 // Program menu
 __code state_fn * programs[] = {dump_program, search_program, edit_program, move_program, fill_program, 
-                               time_temp_program, debug}; 
+                               time_temp_program, serial_program, debug}; 
 __code char * program_strings[] = { "Dump","Search", "Edit", "Move", "Fill",
-                                    "Time & Temp", "Debug"};
+                                    "Time & Temp", "Serial", "Debug"};
 __code unsigned char num_programs = 7;
 
 // Current Program state
@@ -266,7 +275,9 @@ void debug(void) {
     change_display(0xFF);
     return;   
 }
-
+void serial_program(void) {
+    init_uart(9600, 0); // 9600 no parity
+}
 /**
  * Dump Program
  * Program used to display contents of RAM
@@ -720,6 +731,45 @@ void do_conversion(int * whole, int * frac) {
     *frac = temp % 100;
     return;
 
+}
+void set_baud(unsigned int baud) {
+    int val = 28800 / baud;
+    TH1 = -val;
+}
+void set_parity(unsigned char par) {
+    parity = par;
+}
+void enable_recieve() {
+    REN = 1;
+}
+void init_uart(unsigned int baud, unsigned char par) {
+    // Setup Serial config
+    SCON = 0x00; // Clear Serial config
+    set_parity(par);
+    if(parity == 0) {
+        // Set mode 1
+        SM0 = 0; SM1 = 1;
+    } else {
+        // Set mode 3
+        SM0 = 1; SM1 = 1;
+    }
+
+    // Setup baudrate generator
+    TMOD = 0x20;    // Set 8-bit autoreload mode
+    set_baud(baud); // Load timer with divider value
+    TR1 = 1;        // Start timer
+}
+void send_data(unsigned char data) {
+    SBUF = data;        // Send data
+    while(!(TI));       // Wait to finish sending
+    SCON = SCON & 0xFD; // Clear for next send
+}
+char recieve_data() {
+    char data;
+    while(!(RI));           // Wait for data
+    data = SBUF;            // Store data;
+    SCON = SCON & 0xFE;     // Clear for next recieve;
+    return data; 
 }
 char ram_test() {
     __xdata unsigned char * i = 0x0000;
