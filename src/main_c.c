@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <8051.h>
 
 // RTC Addresses
 #define S1 0x00
