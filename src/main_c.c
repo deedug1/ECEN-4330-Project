@@ -118,7 +118,7 @@ void set_baud(unsigned int baud);
 void set_parity(unsigned char par);
 void init_uart(unsigned int baud, unsigned char par);
 void enable_recieve();
-char recieve_data();
+char recieve_data(char * data);
 void send_data(unsigned char data);
 
 // Memory Functions
@@ -276,7 +276,22 @@ void debug(void) {
     return;   
 }
 void serial_program(void) {
+    __xdata char data_out;
+    __xdata char data_in;
     init_uart(9600, 0); // 9600 no parity
+    enable_recieve();
+    do {
+        data_out = 0;
+        data_in = 0;
+        set_keypad_state_b();
+        if(KEYPAD_STATE != 0xFFFF) {
+            data_out = *(last_key + KEYPAD_CHARS);
+            send_data(data_out);
+            recieve_data(&data_in);
+            printf_tiny("%c",data_in);
+        }
+    } while(KEYPAD_STATE != !(KEY_F | KEY_1));
+    return;
 }
 /**
  * Dump Program
@@ -760,16 +775,31 @@ void init_uart(unsigned int baud, unsigned char par) {
     TR1 = 1;        // Start timer
 }
 void send_data(unsigned char data) {
-    SBUF = data;        // Send data
+    ACC = data;
+    // Parity flag checks accumulator for even parity
+    if(parity == 1) {
+        TB8 = !P; // Odd parity
+    } else if(parity == 2) {
+        TB8 = P; // Even parity
+    }
+    SBUF = ACC;         // Send data
     while(!(TI));       // Wait to finish sending
     SCON = SCON & 0xFD; // Clear for next send
 }
-char recieve_data() {
-    char data;
+char recieve_data(char * data) {
+    char result = 0;
     while(!(RI));           // Wait for data
-    data = SBUF;            // Store data;
-    SCON = SCON & 0xFE;     // Clear for next recieve;
-    return data; 
+    *data = SBUF;           // Store data
+    ACC = *data;
+    if(parity == 1) {
+        result = !P == RB8;
+    } else if (parity == 2) {
+        result = P == RB8;
+    } else {
+        result = 1;
+    }
+    SCON = SCON & 0xFE;     // Clear for next recieve
+    return result;
 }
 char ram_test() {
     __xdata unsigned char * i = 0x0000;
