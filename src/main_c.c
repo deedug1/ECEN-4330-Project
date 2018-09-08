@@ -78,7 +78,7 @@ unsigned int __xdata KEYPAD_STATE; // State of keypad since last scan
 int __xdata whole_temp; // whole part of temperature
 int __xdata frac_temp; // Fraction part of temperature
 char __xdata last_key; // Last Keypad index since last scan
-unsigned char __xdata parity;
+__xdata unsigned char parity;
 // Delays
 void delay1ms();
 void delay(int x);
@@ -100,6 +100,7 @@ char set_keypad_state_b();
 char is_pressed(int key);
 void get_address(char * msg, char * rng, __xdata char ** put, char line);
 void get_byte(char * msg, char * rng, char * put, char line);
+char get_string(__xdata char * str);
 void scan_keypad();
 
 // RTC interfacing functions
@@ -118,8 +119,10 @@ void set_baud(unsigned int baud);
 void set_parity(unsigned char par);
 void init_uart(unsigned int baud, unsigned char par);
 void enable_recieve();
-char recieve_data(char * data);
-void send_data(unsigned char data);
+char recieve_char(char * data);
+void send_char(unsigned char data);
+char recieve_string(char * data);
+void send_string(char * data);
 
 // Memory Functions
 char ram_test();
@@ -135,14 +138,15 @@ void move_program(void);
 void set_RTC_program(void);
 void time_temp_program(void);
 void serial_program(void);
+void serial_char_program(void);
 void oregon_program(void);
 
 // Program menu
 __code state_fn * programs[] = {dump_program, search_program, edit_program, move_program, fill_program, 
-                               time_temp_program, serial_program, debug}; 
+                               time_temp_program, serial_program, serial_char_program, debug}; 
 __code char * program_strings[] = { "Dump","Search", "Edit", "Move", "Fill",
-                                    "Time & Temp", "Serial", "Debug"};
-__code unsigned char num_programs = 7;
+                                    "Time & Temp", "Serial", "Serial C", "Debug"};
+__code unsigned char num_programs = 9;
 
 // Current Program state
 struct state __xdata state;
@@ -201,7 +205,18 @@ void main_menu(void) {
     state.next = programs[index];
     return;
 }
-
+char get_string(__xdata char * str) {
+    char count = 0;
+    do {
+        get_byte("", "", str, 0);
+        set_LCD_cursor(0x54 + count);
+        printf_tiny("%c", *str);
+        str++;
+        
+    } while(*(str - 1) != '\0' && ++count < 20);
+    *str = '\0';
+    return count;
+}
 void get_address(char * msg, char * rng, __xdata char ** put, char line) {
     char index = 0;
     do {
@@ -223,7 +238,6 @@ void get_address(char * msg, char * rng, __xdata char ** put, char line) {
 
     return;
 }
-
 void get_byte(char * msg, char * rng, char * put, char line) {
     char index = 0;
     do {
@@ -275,7 +289,7 @@ void debug(void) {
     change_display(0xFF);
     return;   
 }
-void serial_program(void) {
+void serial_char_program(void) {
     __xdata char data_out;
     __xdata char data_in;
     init_uart(9600, 0); // 9600 no parity
@@ -283,14 +297,49 @@ void serial_program(void) {
     do {
         data_out = 0;
         data_in = 0;
-        set_keypad_state_b();
-        if(KEYPAD_STATE != 0xFFFF) {
-            data_out = *(last_key + KEYPAD_CHARS);
-            send_data(data_out);
-            recieve_data(&data_in);
-            printf_tiny("%c",data_in);
+        get_byte("Send?", "", &data_out, 0);
+        if(data_out) {
+            clear_LCD();
+            send_char(data_out);
+            recieve_char(&data_in);
+            set_LCD_line(3);
+            printf_tiny("%x %x",data_in, data_out);
+            set_keypad_state_b();
         }
-    } while(KEYPAD_STATE != !(KEY_F | KEY_1));
+    } while(data_out);
+    state.next = main_menu;
+    return;
+}
+void serial_program(void) {
+    __xdata char * baud;
+    __xdata char str[21];
+    get_address("Enter baud", "(0x04B0-0x4B00)", &baud, 0);
+    get_byte("Enter parity: ", "0=none,1=odd,2=even", &parity, 0);
+    init_uart((int)baud, parity);
+    enable_recieve();
+    do {
+    clear_LCD();
+    printf_tiny("0: Send String");
+    set_LCD_line(1);
+    printf_tiny("1: Recieve String");
+    set_LCD_line(2);
+    printf_tiny("A: Go home");
+    set_LCD_line(3);
+    printf_tiny("TH1: %dparity: %d", TH1, (int)parity);
+        set_keypad_state_b();
+        if(is_pressed(KEY_0)) {
+            clear_LCD();
+            get_string(str);
+            send_string(str);
+        } else if(is_pressed(KEY_1)) {
+            clear_LCD();
+            recieve_string(str);
+            set_LCD_line(3);
+            printf_tiny("%s", str);
+            set_keypad_state_b();
+        }
+    } while(!is_pressed(KEY_A));
+    state.next = main_menu;
     return;
 }
 /**
@@ -748,7 +797,14 @@ void do_conversion(int * whole, int * frac) {
 
 }
 void set_baud(unsigned int baud) {
-    int val = 28800 / baud;
+    char val;
+    if(baud > 2389) {
+        PCON = PCON | SMOD;
+        val = 57600 / baud;
+    } else {
+        PCON = PCON & !SMOD;
+        val = 28800 / baud;
+    }
     TH1 = -val;
 }
 void set_parity(unsigned char par) {
@@ -774,7 +830,22 @@ void init_uart(unsigned int baud, unsigned char par) {
     set_baud(baud); // Load timer with divider value
     TR1 = 1;        // Start timer
 }
-void send_data(unsigned char data) {
+void send_string(char * data){
+    while(*data != '\0') {
+        send_char(*data);
+        data++;
+    }
+}
+char recieve_string(char * data) {
+    char count = 0;
+    do {
+        recieve_char(data);
+        data++;
+    } while(*(data - 1) != '\0');
+    *data = '\0';
+    return count;
+}
+void send_char(unsigned char data) {
     ACC = data;
     // Parity flag checks accumulator for even parity
     if(parity == 1) {
@@ -782,11 +853,11 @@ void send_data(unsigned char data) {
     } else if(parity == 2) {
         TB8 = P; // Even parity
     }
-    SBUF = ACC;         // Send data
+    SBUF = data;         // Send data
     while(!(TI));       // Wait to finish sending
-    SCON = SCON & 0xFD; // Clear for next send
+    TI = 0;// Clear for next send
 }
-char recieve_data(char * data) {
+char recieve_char(char * data) {
     char result = 0;
     while(!(RI));           // Wait for data
     *data = SBUF;           // Store data
@@ -798,7 +869,7 @@ char recieve_data(char * data) {
     } else {
         result = 1;
     }
-    SCON = SCON & 0xFE;     // Clear for next recieve
+    RI = 0;    // Clear for next recieve
     return result;
 }
 char ram_test() {
