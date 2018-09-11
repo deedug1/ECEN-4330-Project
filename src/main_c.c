@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <8051.h>
+#include <at89c55.h>
 
 // RTC Addresses
 #define S1 0x00
@@ -119,10 +119,10 @@ void set_baud(unsigned int baud);
 void set_parity(unsigned char par);
 void init_uart(unsigned int baud, unsigned char par);
 void enable_recieve();
-char recieve_char(char * data);
-void send_char(unsigned char data);
-char recieve_string(char * data);
-void send_string(char * data);
+char recieve_char(__xdata char * data);
+void send_char(__xdata unsigned char data);
+char recieve_string(__xdata char * data);
+void send_string(__xdata char * data);
 
 // Memory Functions
 char ram_test();
@@ -290,33 +290,33 @@ void debug(void) {
     return;   
 }
 void serial_char_program(void) {
-    __xdata char data_out;
-    __xdata char data_in;
-    init_uart(9600, 0); // 9600 no parity
-    enable_recieve();
-    do {
-        data_out = 0;
-        data_in = 0;
-        get_byte("Send?", "", &data_out, 0);
-        if(data_out) {
-            clear_LCD();
-            send_char(data_out);
-            recieve_char(&data_in);
-            set_LCD_line(3);
-            printf_tiny("%x %x",data_in, data_out);
-            set_keypad_state_b();
-        }
-    } while(data_out);
-    state.next = main_menu;
-    return;
+    unsigned char mybyte;
+    clear_LCD();
+    TMOD = 0x20;
+    TH1 = 0xFD;
+    SCON = 0x50;
+    TR1 = 1;
+    while(1) {
+        while(RI == 0);
+        mybyte = SBUF;
+        printf_tiny("%c", mybyte);
+        RI = 0;
+    }
 }
 void serial_program(void) {
     __xdata char * baud;
     __xdata char str[21];
+    __xdata char p = 1;
     get_address("Enter baud", "(0x04B0-0x4B00)", &baud, 0);
     get_byte("Enter parity: ", "0=none,1=odd,2=even", &parity, 0);
     init_uart((int)baud, parity);
-    enable_recieve();
+    clear_LCD();
+    printf_tiny("PCON:%x,SCON:%x", PCON, SCON);
+    set_LCD_line(1);
+    printf_tiny("TH1:%x,TCON:%x", TH1, TCON);
+    set_LCD_line(2);
+    printf_tiny("TMOD:%x",TMOD);
+    set_keypad_state_b();
     do {
     clear_LCD();
     printf_tiny("0: Send String");
@@ -325,15 +325,15 @@ void serial_program(void) {
     set_LCD_line(2);
     printf_tiny("A: Go home");
     set_LCD_line(3);
-    printf_tiny("TH1: %dparity: %d", TH1, (int)parity);
+    printf_tiny("TH1: %xparity: %d", TH1, (int)parity);
         set_keypad_state_b();
         if(is_pressed(KEY_0)) {
             clear_LCD();
             get_string(str);
             send_string(str);
         } else if(is_pressed(KEY_1)) {
-            clear_LCD();
-            recieve_string(str);
+            p = recieve_string(str);
+
             set_LCD_line(3);
             printf_tiny("%s", str);
             set_keypad_state_b();
@@ -798,12 +798,13 @@ void do_conversion(int * whole, int * frac) {
 }
 void set_baud(unsigned int baud) {
     char val;
-    if(baud > 2389) {
-        PCON = PCON | SMOD;
-        val = 57600 / baud;
+    // Calculating for 12Mhz clock
+    if(baud > 4800) {
+        PCON = 0x80;
+        val = 62500 / baud;
     } else {
-        PCON = PCON & !SMOD;
-        val = 28800 / baud;
+        PCON = 0x00;
+        val = 31250 / baud;
     }
     TH1 = -val;
 }
@@ -824,28 +825,32 @@ void init_uart(unsigned int baud, unsigned char par) {
         // Set mode 3
         SM0 = 1; SM1 = 1;
     }
-
+    // Enable recieve by default
+    REN = 1;
     // Setup baudrate generator
     TMOD = 0x20;    // Set 8-bit autoreload mode
     set_baud(baud); // Load timer with divider value
     TR1 = 1;        // Start timer
 }
-void send_string(char * data){
+void send_string(__xdata char * data){
     while(*data != '\0') {
         send_char(*data);
         data++;
     }
+    send_char('\0');
 }
-char recieve_string(char * data) {
-    char count = 0;
+char recieve_string(__xdata char * data) {
+    char par = 1;
+    clear_LCD();
     do {
-        recieve_char(data);
+        par &= recieve_char(data);
+        printf_tiny("%c", *data);
         data++;
     } while(*(data - 1) != '\0');
     *data = '\0';
-    return count;
+    return par;
 }
-void send_char(unsigned char data) {
+void send_char(__xdata unsigned char data) {
     ACC = data;
     // Parity flag checks accumulator for even parity
     if(parity == 1) {
@@ -854,23 +859,21 @@ void send_char(unsigned char data) {
         TB8 = P; // Even parity
     }
     SBUF = data;         // Send data
-    while(!(TI));       // Wait to finish sending
-    TI = 0;// Clear for next send
+    while(TI == 0);       // Wait to finish sending
+    TI = 0;             // Clear for next send
 }
-char recieve_char(char * data) {
-    char result = 0;
-    while(!(RI));           // Wait for data
-    *data = SBUF;           // Store data
+char recieve_char(__xdata char * data) {
+    while(RI == 0);         // Wait for data
+    RI = 0;                 // Clear for next recieve
+    *data = SBUF;
     ACC = *data;
     if(parity == 1) {
-        result = !P == RB8;
+        return !P == RB8;
     } else if (parity == 2) {
-        result = P == RB8;
+        return P == RB8;
     } else {
-        result = 1;
+        return 1;
     }
-    RI = 0;    // Clear for next recieve
-    return result;
 }
 char ram_test() {
     __xdata unsigned char * i = 0x0000;
