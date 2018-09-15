@@ -290,18 +290,25 @@ void debug(void) {
     return;   
 }
 void serial_char_program(void) {
-    unsigned char mybyte;
+    __xdata char p = 1;
+    __xdata char * baud;
+    __xdata char send;
+    __xdata char rec;
+    get_address("Enter baud: ", "(0x04b0-0x4b00", &baud, 0);
+    get_byte("Enter parity: ", "0=none,1=odd,2=even", &parity, 0);
+    init_uart((int)baud, parity);
     clear_LCD();
-    TMOD = 0x20;
-    TH1 = 0xFD;
-    SCON = 0x50;
-    TR1 = 1;
-    while(1) {
-        while(RI == 0);
-        mybyte = SBUF;
-        printf_tiny("%c", mybyte);
-        RI = 0;
-    }
+    do{
+        clear_LCD();
+        get_byte("Enter byte: ", "(00-FF)", &send, 0);
+        send_char(send);
+        recieve_char(&rec);
+        set_LCD_line(3);
+        printf_tiny("%c", rec);
+        set_keypad_state_b();
+    } while(send != '\0');
+    state.next = main_menu;
+    return;
 }
 void serial_program(void) {
     __xdata char * baud;
@@ -333,7 +340,8 @@ void serial_program(void) {
             send_string(str);
         } else if(is_pressed(KEY_1)) {
             p = recieve_string(str);
-
+            set_LCD_line(2);
+            printf_tiny("Parity result: %d", p);
             set_LCD_line(3);
             printf_tiny("%s", str);
             set_keypad_state_b();
@@ -799,7 +807,7 @@ void do_conversion(int * whole, int * frac) {
 void set_baud(unsigned int baud) {
     char val;
     // Calculating for 12Mhz clock
-    if(baud > 4800) {
+    if(baud > 9600) {
         PCON = 0x80;
         val = 62500 / baud;
     } else {
@@ -852,11 +860,12 @@ char recieve_string(__xdata char * data) {
 }
 void send_char(__xdata unsigned char data) {
     ACC = data;
+    CY = P;
     // Parity flag checks accumulator for even parity
     if(parity == 1) {
-        TB8 = !P; // Odd parity
+        TB8 = !CY; // Odd parity
     } else if(parity == 2) {
-        TB8 = P; // Even parity
+        TB8 = CY; // Even parity
     }
     SBUF = data;         // Send data
     while(TI == 0);       // Wait to finish sending
@@ -867,10 +876,11 @@ char recieve_char(__xdata char * data) {
     RI = 0;                 // Clear for next recieve
     *data = SBUF;
     ACC = *data;
+    CY = P; // Save the Parity bit.
     if(parity == 1) {
-        return !P == RB8;
+        return !CY == RB8;
     } else if (parity == 2) {
-        return P == RB8;
+        return CY == RB8;
     } else {
         return 1;
     }
